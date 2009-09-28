@@ -47,8 +47,8 @@ module Gravatarify
         "?#{params.sort * '&'}" unless params.empty?
       end
       
-      def self.get_smart_email_from(o)
-        (o.respond_to?(:email) ? o.email : (o.respond_to?(:mail) ? o.mail : o)).to_s
+      def self.get_smart_email_from(obj)
+        (obj.respond_to?(:email) ? obj.email : (obj.respond_to?(:mail) ? obj.mail : obj)).to_s
       end
   end
 end
