@@ -43,4 +43,14 @@ namespace :metrics do
     rcov = %(rcov -Ilib:test --exclude '\/gems\/' -o doc/coverage -T test/*_test.rb )
     system rcov
   end
+  
+  desc 'Report the fishy smell of bad code (requires reek)'
+  task :smelly do |t|
+    puts
+    puts "* * * NOTE: reek currently reports several false positives,"
+    puts "      eventhough it's probably good to check once in a while!"
+    puts
+    reek = %(reek -s lib)
+    system reek
+  end
 end
