@@ -28,6 +28,8 @@ module Gravatarify
       email_hash = Digest::MD5.hexdigest(Base.get_smart_email_from(email).strip.downcase)
       build_gravatar_host(email_hash, url_options.delete(:secure)) << "/avatar/#{email_hash}.#{url_options.delete(:filetype) || GRAVATAR_DEFAULT_FILETYPE}#{build_gravatar_options(url_options)}"
     end
+    # Ensure that default implementation is always available through +base_gravatar_url+.
+    alias_method :base_gravatar_url, :gravatar_url
   
     private
       def build_gravatar_host(str_hash, secure = false)
