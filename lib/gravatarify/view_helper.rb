@@ -11,7 +11,7 @@ module Gravatarify::ViewHelper
   # +gravatar_url+ and which to +image_tag+, so using this method it's not possible to
   # send arbitary attributes to +gravatar_url+ and have them included in the url.
   def gravatar_tag(email, options = {})
-    url_options = options.symbolize_keys.reject { |k,v| !Gravatarify::GRAVATAR_OPTIONS.include?(k) }
+    url_options = options.symbolize_keys.reject { |key,value| !Gravatarify::GRAVATAR_OPTIONS.include?(key) }
     options[:alt] ||= Gravatarify::Base.get_smart_email_from(email) # use email as :alt attribute
     options[:width] = options[:height] = (url_options[:size] || Gravatarify::GRAVATAR_DEFAULT_SIZE) # customize size
     image_tag(email.respond_to?(:gravatar_url) ? email.gravatar_url(url_options) : gravatar_url(email, url_options), options)
