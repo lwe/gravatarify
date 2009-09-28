@@ -22,9 +22,23 @@ YARD::Rake::YardocTask.new(:doc) do |t|
   ]
 end
 
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name = "gravatarify"
+    gemspec.summary = gemspec.description = "Gravatar URLs for your ruby"
+    gemspec.email = "lukas.westermann@gmail.com"
+    gemspec.homepage = "http://github.com/lwe/gravatarify"
+    gemspec.authors = ["Lukas Westermann"]
+  end
+rescue LoadError
+  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+end
+
 desc 'Clean all generated files (.yardoc and doc/*)'
 task :clean do |t|
   FileUtils.rm_rf "doc"
+  FileUtils.rm_rf "pkg"
   FileUtils.rm_rf ".yardoc"
 end
 
