@@ -1,4 +1,4 @@
-module Gravatarify::GravatarHelper
+module Gravatarify::ViewHelper
   include Gravatarify::Base
   
   # Create <img .../> tag by passing +email+ to +gravatar_url+, is based

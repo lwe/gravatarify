@@ -1,11 +1,11 @@
 require 'test_helper'
 require 'active_support'
 require 'action_view/helpers'
-require 'gravatarify/gravatar_helper'
+require 'gravatarify/view_helper'
 
-class GravatarifyGravatarHelperTest < Test::Unit::TestCase
+class GravatarifyViewHelperTest < Test::Unit::TestCase
   include ActionView::Helpers
-  include Gravatarify::GravatarHelper  
+  include Gravatarify::ViewHelper  
   
   def setup
     # just ensure that no global options are defined when starting next test
