@@ -46,17 +46,19 @@ module Gravatarify
     # Useful when working on SSL enabled sites. Of course often used options should be set through
     # +Gravatarify.options+.
     #
-    # == List of options:
-    # * <tt>:default</tt> - +Proc+ or string - URL of an image to use as default when no gravatar exists for that
-    #   url. Gravatar.com also accepts special values like +identicon+, +monsterid+ or +wavatar+ which just displays
-    #   a generic icon based on the hash or the <tt>404</tt> which returns a HTTP Status 404 error page.
-    # * <tt>:rating</tt> - string or symbol - Define the rating, gravatar.com supports <tt>:g</tt> (default),
-    #   <tt>:pg</tt>, <tt>:r</tt> or <tt>:x</tt>.
-    # * <tt>:size</tt> - integer - Size of the image, images are square (default, as defined by gravatar.com is 80).
-    # * <tt>:secure</tt> - boolean - If set to +true+, then the secure gravatar.com url is used, else the host
-    #   is inflected based on the hash of the md5 (Default: +false+)
-    # * <tt>:filetype</tt> - string or symbol - Gravatar.com currently only supports +:jpg+, +:gif+ and +:png+
-    #   (Default is: +:jpg+)    
+    # @param [String, #email, #mail] email a string representing an email, or object which responds to +email+ or +mail+
+    # @param [Hash] url_options customize generated gravatar.com url
+    # @option url_options [String, Proc] :default (nil) URL of an image to use as default when no gravatar exists. Gravatar.com
+    #                                    also accepts special values like +identicon+, +monsterid+ or +wavater+ which just displays
+    #                                    a generic icon based on the hash or <tt>404</tt> which return a HTTP Status 404.
+    # @option url_options [String, Symbol] :rating (:g) Specify the rating, gravatar.com supports <tt>:g</tt>, <tt>:pg</tt>,
+    #                                     <tt>:r</tt> or <tt>:x</tt>, they correspond to movie ratings :)
+    # @option url_options [Integer] :size (80) The size of the (square) image.
+    # @option url_options [Boolean, Proc] :secure (false) If set to +true+, then uses the secure gravatar.com URL. If a Proc is
+    #                                     supplied it's evaluated, the Proc should evaluate to +true+ or +false+.
+    # @option url_options [String, Symbol] :filetype (:jpg) Gravatar.com supports only <tt>:gif</tt>, <tt>:jpg</tt> and <tt>:png</tt>
+    # @return [String] In any case (even if supplied +email+ is +nil+) returns a fully qualified gravatar.com URL.
+    #                  The returned string is not yet HTML escaped, *but* all +url_options+ have been URI escaped.
     def gravatar_url(email, url_options = {})
       # FIXME: add symbolize_keys again, maybe just write custom method, so we do not depend on ActiveSupport magic...
       url_options = Gravatarify.options.merge(url_options)
