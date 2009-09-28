@@ -1,9 +1,17 @@
 require 'test_helper'
-require 'activerecord'
-require 'dm-core'
+begin
+  require 'activerecord'
+rescue LoadError
+  puts "INCOMPLETE - ActiveRecord not available -> 2 tests skipped"
+end
+begin
+  require 'dm-core'
+rescue LoadError
+  puts "INCOMPLETE - DataMapper not available -> 2 tests skipped"
+end
 require 'gravatarify'
 
-class GravatarifyArDmTest < Test::Unit::TestCase
+class GravatarifyIntegrationTest < Test::Unit::TestCase
   def setup; Gravatarify.options.clear end
 
   if defined?(ActiveRecord)
@@ -16,8 +24,6 @@ class GravatarifyArDmTest < Test::Unit::TestCase
         assert_respond_to ActiveRecord::Base, :gravatarify
       end
     end
-  else
-    puts "INCOMPLETE - ActiveRecord not available -> skipped"
   end
   
   if defined?(DataMapper)
@@ -30,7 +36,5 @@ class GravatarifyArDmTest < Test::Unit::TestCase
         assert_respond_to DataMapper::Model, :gravatarify
       end
     end
-  else
-    puts "INCOMPLETE - DataMapper not available -> skipped"
   end
 end
