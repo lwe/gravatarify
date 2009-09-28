@@ -14,18 +14,21 @@ TODO: need to gemify it...
 
 Probably one of the easiest ways to add support for gravatar images is with the included view helpers:
 
-    <%= gravatar_tag @user.email %>
+    <%= gravatar_tag @user %> # assumes @user has email or mail field!
     
 This builds a neat `<img/>`-tag, if you need to pass in stuff like the size etc. just:
 
-    <%= gravatar_tag @user.email, :size => 25, :rating => :x, :class => "gravatar" %>
+    <%= gravatar_tag @user, :size => 25, :rating => :x, :class => "gravatar" %>
     
 This will display an "X" rated avatar which is 25x25 pixel in size and the image tag will have the class `"gravatar"`.
 If more control is required, or just the URL, well then go ahead and use `gravatar_url` instead:
 
-    %img{ :src => gravatar_url(@user.email, :size => 16), :width => 16, :height => 16, :alt => @user.name, :class => "avatar avatar-16"}/
+    %img{ :src => gravatar_url(@user.author_email, :size => 16), :width => 16, :height => 16,
+          :alt => @user.name, :class => "avatar avatar-16"}/
     
-Yeah, a `HAML` example, creating an `<img/>`-tag by using `gravatar_url`.
+Yeah, a `HAML` example, creating an `<img/>`-tag by using `gravatar_url`. It's important to know that 
+also an object can be passed to `gravatar_url`, if it responds to either `email` or `mail`. If not (like
+in the example above), the email address must be passed in.
 
 ## Using the model helpers
 
@@ -48,7 +51,19 @@ Defaults can even be passed to the `gravatarify` call, so no need to repeat them
     gravatarify :employee_mail, :size => 16, :rating => :r
    
 All gravatars will now come from the `employee_mail` field, not the default `email` or `mail` field and be in 16x16px in size
-and have a rating of 'r'. Of course these can be override in calls to `gravatar_url` like before.
+and have a rating of 'r'. Of course these can be overriden in calls to `gravatar_url` like before. Pretty cool is also the
+fact that an object can be passed directly to `gravatar_tag` if it responds to `gravatar_url`, like:
+
+    # model:
+    class User < ActiveRecord::Base
+      gravatarify :size => 16, :secure => true
+    end
+    
+    # view:
+    <%= gravatar_tag @user %> # -> <img ... width="16" src="https://secure.gravatar..." height="16" />
+    
+The `gravatar_tag` looks if the object responds to `gravatar_url` and if so, just passes the options to it,
+it works also with plain old ruby objects, of course :)
 
 ### PORO - plain old ruby objects (yeah, POJO sounds smoother :D)
 

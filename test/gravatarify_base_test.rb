@@ -65,6 +65,29 @@ class GravatarifyBaseTest < Test::Unit::TestCase
     end    
   end
   
+  context "#gravatar_url when passed in an object" do
+    should "look for :email method and use it to generate gravatar_url from" do
+      obj = Object.new
+      mock(obj).email { "bella@gmail.com" }
+      
+      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", gravatar_url(obj)
+    end
+    
+    should "look for :mail of field :email does not exist" do
+      obj = Object.new
+      mock(obj).mail { "bella@gmail.com" }
+      
+      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", gravatar_url(obj)      
+    end
+    
+    should "finally just use to_s... if neither :email nor :mail exists" do
+      obj = Object.new
+      mock(obj).to_s { "bella@gmail.com" }
+      
+      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", gravatar_url(obj)      
+    end
+  end
+  
   context "Gravatar hosts support" do
     should "switch to different hosts based on generated email hash, yet always the same for consecutive calls with the same email!" do
       assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", gravatar_url('bella@gmail.com')
@@ -92,8 +115,8 @@ class GravatarifyBaseTest < Test::Unit::TestCase
       assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", mock_no_ssl.gravatar_url('bella@gmail.com')
     end
   end
-  
-  context "options" do
+    
+  context "Gravatarify#options" do
     setup do
       Gravatarify.options[:anything] = "test"
       Gravatarify.options[:filetype] = "png"
