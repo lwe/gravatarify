@@ -13,10 +13,19 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = true
 end
 
-desc 'Generate documentation for the gravatarify plugin. (requires yard)'
+desc 'Generate documentation for gravatarify. (requires yard)'
 YARD::Rake::YardocTask.new(:doc) do |t|
   t.files = ['lib/**/*.rb']
-  t.options = ["--readme", "README.md"]
+  t.options = [
+      "--readme", "README.md",
+      "--title", "Gravatarify API Documentation"
+  ]
+end
+
+desc 'Clean all generated files (.yardoc and doc/*)'
+task :clean do |t|
+  FileUtils.rm_rf "doc"
+  FileUtils.rm_rf ".yardoc"
 end
 
 namespace :metrics do
