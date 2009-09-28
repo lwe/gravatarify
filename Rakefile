@@ -26,11 +26,12 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = "gravatarify"
-    gemspec.summary = gemspec.description = "Gravatar URLs for your ruby"
+    gemspec.summary = "Gravatar URLs for your ruby"
     gemspec.email = "lukas.westermann@gmail.com"
     gemspec.homepage = "http://github.com/lwe/gravatarify"
     gemspec.authors = ["Lukas Westermann"]
   end
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
