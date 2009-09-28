@@ -23,10 +23,10 @@ This builds a neat `<img/>`-tag, if you need to pass in stuff like the size etc.
 This will display an "X" rated avatar which is 25x25 pixel in size and the image tag will have the class `"gravatar"`.
 If more control is required, or just the URL, well then go ahead and use `gravatar_url` instead:
 
-    %img{ :src => gravatar_url(@user.author_email, :size => 16), :width => 16, :height => 16,
+     <%= image_tag gravatar_url(@user.author_email, :size => 16), :size => "16x16",
           :alt => @user.name, :class => "avatar avatar-16"}/
     
-Yeah, a `HAML` example, creating an `<img/>`-tag by using `gravatar_url`. It's important to know that 
+Using rails `image_tag` to create an `<img/>`-tag with `gravatar_url`. It's important to know that 
 also an object can be passed to `gravatar_url`, if it responds to either `email` or `mail`. If not (like
 in the example above), the email address must be passed in.
 
