@@ -77,7 +77,7 @@ module Gravatarify
         params = []
         url_options.each_pair do |key, value|
           key = GRAVATAR_ABBREV_OPTIONS[key] if GRAVATAR_ABBREV_OPTIONS.include?(key) # shorten key!
-          value = value.call(url_options) if key.to_s == 'd' and value.respond_to?(:call)
+          value = value.call(url_options, self) if key.to_s == 'd' and value.respond_to?(:call)
           params << "#{CGI.escape(key.to_s)}=#{CGI.escape(value.to_s)}" if value
         end
         "?#{params.sort * '&'}" unless params.empty?

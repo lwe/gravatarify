@@ -55,7 +55,7 @@ class GravatarifyBaseTest < Test::Unit::TestCase
     end
   
     should "handle Procs as :default, to easily generate default urls based on supplied :size" do
-      default = Proc.new { |o| "http://example.com/gravatar#{o[:size] ? '-' + o[:size].to_s : ''}.jpg" }
+      default = Proc.new { |*args| "http://example.com/gravatar#{args.first[:size] ? '-' + args.first[:size].to_s : ''}.jpg" }
       assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=http%3A%2F%2Fexample.com%2Fgravatar.jpg",
                     build_gravatar_url('bella@gmail.com', :default => default)        
       assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=http%3A%2F%2Fexample.com%2Fgravatar-25.jpg&s=25",

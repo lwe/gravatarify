@@ -88,7 +88,7 @@ class GravatarifyObjectSupportTest < Test::Unit::TestCase
     should "allow multiple sources to be defined, yet still handle options!" do
       poro = Class.new do
         include Gravatarify::ObjectSupport
-        gravatarify :email, :employee_email, :default => Proc.new { |o| "http://initech.com/avatar-#{o[:size] || 80}.jpg" }
+        gravatarify :email, :employee_email, :default => Proc.new { |*args| "http://initech.com/avatar-#{args.first[:size] || 80}.jpg" }
         def email; "info@initech.com" end
         def employee_email; "peter.gibbons@initech.com" end
       end
