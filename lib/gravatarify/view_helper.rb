@@ -1,5 +1,8 @@
 module Gravatarify::ViewHelper
   include Gravatarify::Base
+
+  # Ensure proper gravatar_url method is available!
+  alias_method :gravatar_url, :build_gravatar_url
   
   # Create <img .../> tag by passing +email+ to +gravatar_url+, is based
   # on rails +image_tag+ helper method.

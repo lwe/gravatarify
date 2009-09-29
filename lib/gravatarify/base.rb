@@ -20,13 +20,13 @@ module Gravatarify
   
   # Options which can be globally overriden by the application
   def self.options; @options ||= {} end
-  
+    
   module Base
     
     # Method which builds a gravatar url based on a supplied email and options as
     # defined by gravatar.com (http://en.gravatar.com/site/implement/url).
     #
-    #    gravatar_url('peter.gibbons@initech.com', :size => 16) # => "http://0.gravatar.com/avatar/cb7865556d41a3d800ae7dbb31d51d54.jpg?s=16"
+    #    build_gravatar_url('peter.gibbons@initech.com', :size => 16) # => "http://0.gravatar.com/avatar/cb7865556d41a3d800ae7dbb31d51d54.jpg?s=16"
     #
     # It supports multiple gravatar hosts (based on email hash), i.e. depending
     # on the hash, either <tt>0.gravatar.com</tt>, <tt>1.gravatar.com</tt>, <tt>2.gravatar.com</tt> or <tt>www.gravatar.com</tt>
@@ -36,12 +36,12 @@ module Gravatarify
     # is used instead to build the gravatar hash. Very useful to just pass in ActiveRecord object for instance:
     #    
     #    @user = User.find_by_email("samir@initech.com")
-    #    gravatar_url(@user) # => "http://2.gravatar.com/avatar/58cf31c817d76605d5180ce1a550d0d0.jpg"
-    #    gravatar_url(@user.email) # same as above!
+    #    build_gravatar_url(@user) # => "http://2.gravatar.com/avatar/58cf31c817d76605d5180ce1a550d0d0.jpg"
+    #    build_gravatar_url(@user.email) # same as above!
     # 
     # Among all options as defined by gravatar.com's specification, there also exist some special options:
     #
-    #    gravatar_url(@user, :secure => true) # => https://secure.gravatar.com/ava....
+    #    build_gravatar_url(@user, :secure => true) # => https://secure.gravatar.com/ava....
     #
     # Useful when working on SSL enabled sites. Of course often used options should be set through
     # +Gravatarify.options+.
@@ -59,14 +59,12 @@ module Gravatarify
     # @option url_options [String, Symbol] :filetype (:jpg) Gravatar.com supports only <tt>:gif</tt>, <tt>:jpg</tt> and <tt>:png</tt>
     # @return [String] In any case (even if supplied +email+ is +nil+) returns a fully qualified gravatar.com URL.
     #                  The returned string is not yet HTML escaped, *but* all +url_options+ have been URI escaped.
-    def gravatar_url(email, url_options = {})
+    def build_gravatar_url(email, url_options = {})
       # FIXME: add symbolize_keys again, maybe just write custom method, so we do not depend on ActiveSupport magic...
       url_options = Gravatarify.options.merge(url_options)
       email_hash = Digest::MD5.hexdigest(Base.get_smart_email_from(email).strip.downcase)
       build_gravatar_host(email_hash, url_options.delete(:secure)) << "/avatar/#{email_hash}.#{url_options.delete(:filetype) || GRAVATAR_DEFAULT_FILETYPE}#{build_gravatar_options(url_options)}"
     end
-    # Ensure that default implementation is always available through +base_gravatar_url+.
-    alias_method :base_gravatar_url, :gravatar_url
   
     private
       def build_gravatar_host(str_hash, secure = false)
