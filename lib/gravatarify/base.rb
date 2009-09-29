@@ -20,7 +20,8 @@ module Gravatarify
   
   # Options which can be globally overriden by the application
   def self.options; @options ||= {} end
-    
+  
+  # Provides core support to build gravatar urls based on supplied e-mail strings.
   module Base
     
     # Method which builds a gravatar url based on a supplied email and options as
