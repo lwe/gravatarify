@@ -105,7 +105,7 @@ For example, want to use `build_gravatar_url` in a Sinatra app?
     
 Yeah, that should work :). See {Gravatarify::Base#build_gravatar_url} for more informations and usage examples.
 
-## Want to do more? Here are the options
+## Need more control?
 
 <table>
   <tr>
