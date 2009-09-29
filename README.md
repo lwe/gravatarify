@@ -8,9 +8,24 @@ Best of it? It works with Rails, probably Merb and even plain old Ruby :)
 
 ## Install
 
-TODO: need to gemify it...
+Just install the gem (ensure you have gemcutter in your sources!)
 
-## Using the view helpers
+    sudo gem install gravatarify
+   
+Ready to go! Using Rails? Either add (to `config/environment.rb`):
+
+    config.gem 'gravatarify', :source => 'http://gemcutter.org'
+    
+or install as Rails plugin:
+
+    ./script/plugin install git://github.com/lwe/gravatarify.git
+    
+If the gem is available, just require it (for your simple ruby apps):
+
+    require 'rubygems'
+    require 'gravatarify'
+
+## Using the view helpers (Rails only!)
 
 Probably one of the easiest ways to add support for gravatar images is with the included view helpers:
 
@@ -79,3 +94,109 @@ class:
 Tadaaa! Works exactly like the model helpers, so it's now possible to call `gravatar_url` on instances
 of `PoroUser`.
 
+## Back to the roots?
+
+No need for sophisticated stuff like view helpers and ActiveRecord integration, want to go back to the roots?
+Then feel free to use `Gravatarify::Base#build_gravatar_url` directly.
+
+For example, want to use `build_gravatar_url` in a Sinatra app?
+
+    helpers Gravatarify::Base
+    
+Yeah, that should work :). See {Gravatarify::Base#build_gravatar_url} for more informations and usage examples.
+
+## Want to do more? Here are the options
+
+<table>
+  <tr>
+    <th>Option</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>:default</tt></td>
+    <td>String, Proc</td>
+    <td>Fully qualified URL to an image, which is used if gravatar.com has no image for the supplied email.
+        <tt>Proc</tt>s can be used to return e.g. an image based on the request size (see Advanced stuff).
+        Furthermore gravatar.com provides several "special values" which generate icons, these are "wavatar",
+        "monsterid" and "identicon", finally if set to <tt>404</tt> gravatar.com returns the <tt>HTTP 404 Not Found</tt> error.
+        If nothing is specified gravatar.com returns it's gravatar icon.
+    </td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td><tt>:rating</tt></td>
+    <td>String, Symbol</td>
+    <td>Each avatar at gravatar.com has a rating associated (which is based on MPAAs rating system), valid values are:<br/>
+        <b>g</b> - general audiences, <b>pg</b> - parental guidance suggested, <b>r</b> - restricted and <b>x</b> - x-rated :).
+        Gravatar.com returns <b>g</b>-rated avatars, unless anything else is specified.
+    </td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td><tt>:size</tt></td>
+    <td>Integer</td>
+    <td>Avatars are square, so <tt>:size</tt> defines the length of the sides in pixel, if nothing is specified gravatar.com
+        returns 80x80px images.</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td><tt>:secure</tt></td>
+    <td>Boolean, Proc</td>
+    <td>If set to <tt>true</tt> gravatars secure host (<i>https://secure.gravatar.com/</i>) is used to serve the avatars
+      from. Can be a Proc to inflect wheter or not to use the secure host based on request parameters.</td>
+    <td><tt>false</tt></td>
+  </tr>
+  <tr>
+    <td><tt>:filetype</tt></td>
+    <td>String, Symbol</td>
+    <td>Change image type, gravatar.com supports <tt>:gif</tt>, <tt>:png</tt> and <tt>:jpg</tt>.</td>
+    <td><tt>:jpg</tt></td>
+  </tr>
+</table>
+
+## Not yet enough?
+
+The `:default` option can be passed in a `Proc`, so this is certainly useful to for example
+to generate an image url, based on the request size:
+
+    # in an initializer
+    Gravatarify.options[:default] = Proc.new do |options, object|
+      "http://example.com/avatar-#{options[:size] || 80}.jpg"
+    end
+    
+    # now each time a gravatar url is generated, the Proc is evaluated:
+    @user.gravatar_url
+    # => "http://0.gravatar.com/...jpg?d=http%3A%2F%2Fexample.com%2Fgravatar-80.jpg"
+    @user.gravatar_url(:size => 16)
+    # => "http://0.gravatar.com/...jpg?d=http%3A%2F%2Fexample.com%2Fgravatar-16.jpg&s=16"
+    
+Into the block is passed the options hash and as second parameter the object itself, so in the example above
+`object` would be `@user`, might be useful!? Never used it, so I might remove the second argument...
+
+Not only the `:default` option accepts a Proc, but also `:secure`, can be useful to handle cases where
+it should evaluate against `request.ssl?` for example.
+
+## Licence
+
+Copyright (c) 2009 Lukas Westermann
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
