@@ -1,21 +1,13 @@
 require 'test_helper'
-begin
-  require 'activerecord'
-rescue LoadError
-  puts "INCOMPLETE - ActiveRecord not available -> 2 tests skipped"
-end
-begin
-  require 'dm-core'
-rescue LoadError
-  puts "INCOMPLETE - DataMapper not available -> 3 tests skipped"
-end
+begin; require 'activerecord'; rescue LoadError; end
+begin; require 'dm-core'; rescue LoadError; end
 require 'gravatarify'
 
 class GravatarifyIntegrationTest < Test::Unit::TestCase
   def setup; Gravatarify.options.clear end
 
-  if defined?(ActiveRecord)
-    context "ActiveRecord::Base" do
+  context "ActiveRecord::Base" do
+    if defined?(ActiveRecord)    
       should "include Gravatarify::ObjectSupport" do
         assert ActiveRecord::Base.included_modules.include?(Gravatarify::ObjectSupport)
       end
@@ -23,14 +15,18 @@ class GravatarifyIntegrationTest < Test::Unit::TestCase
       should "respond to #gravatarify" do
         assert_respond_to ActiveRecord::Base, :gravatarify
       end
+    else
+      context "tests" do
+        should "be run (but looks like ActiveRecord is not available)" do
+          flunk "ActiveRecord not available -> thus tests are incomplete (error can be ignored though!)"          
+        end
+      end      
     end
   end
   
-  if defined?(DataMapper)        
-    context "DataMapper model (User)" do      
+  context "DataMapper model (User)" do      
+    if defined?(DataMapper)             
       setup do
-        DataMapper.setup(:default, 'sqlite3::memory:')
-
         class User
           include DataMapper::Resource
           property :id, Serial
@@ -40,8 +36,6 @@ class GravatarifyIntegrationTest < Test::Unit::TestCase
           
           gravatarify
         end
-
-        DataMapper.auto_migrate!               
       end
       
       should "include Gravatarify::ObjectSupport" do
@@ -56,6 +50,12 @@ class GravatarifyIntegrationTest < Test::Unit::TestCase
         should "be able to build correct gravatar_url's!" do
           u = User.new(:email => "peter.gibbons@initech.com")
           assert_equal "http://0.gravatar.com/avatar/cb7865556d41a3d800ae7dbb31d51d54.jpg", u.gravatar_url
+        end
+      end
+    else
+      context "tests" do
+        should "be run (but looks like DataMapper is not available)" do
+          flunk "DataMapper not available -> thus tests are incomplete (error can be ignored though!)"
         end
       end
     end
