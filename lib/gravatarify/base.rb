@@ -10,7 +10,7 @@ module Gravatarify
   GRAVATAR_DEFAULT_SIZE = 80
   
   # Default filetype is JPG
-  GRAVATAR_DEFAULT_FILETYPE = 'jpg'
+  GRAVATAR_DEFAULT_FILETYPE = :jpg
 
   # List of known and valid gravatar options (includes shortened options).
   GRAVATAR_OPTIONS = [ :default, :d, :rating, :r, :size, :s, :secure, :filetype ]
@@ -69,7 +69,7 @@ module Gravatarify
   
     private
       def build_gravatar_host(str_hash, secure = false)
-        secure = secure.call(respond_to?(:request) ? request : nil) if secure.respond_to?(:call)
+        secure = secure.call(self) if secure.respond_to?(:call)
         secure ? "https://secure.gravatar.com" : "http://#{GRAVATAR_HOSTS[str_hash.hash % GRAVATAR_HOSTS.size] || 'www'}.gravatar.com"        
       end
     

@@ -104,7 +104,7 @@ class GravatarifyBaseTest < Test::Unit::TestCase
     end
     
     should "allow Procs for :secure option, enables pretty cool stuff for stuff like request.ssl?" do
-      Gravatarify.options[:secure] = Proc.new { |request| request.respond_to?(:ssl?) ? request.ssl? : false }
+      Gravatarify.options[:secure] = Proc.new { |obj| obj.request.ssl? }
       
       mock_ssl = MockView.new
       mock(mock_ssl).request.stub!.ssl? { true }      
