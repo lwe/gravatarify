@@ -20,10 +20,8 @@ or install as Rails plugin:
 
     ./script/plugin install git://github.com/lwe/gravatarify.git
     
-If the gem is available, just require it (for your simple ruby apps):
-
-    require 'rubygems'
-    require 'gravatarify'
+Of course it's also possible to just add the library onto the `$LOAD_PATH`
+and then it (`require 'gravatarify'`).
 
 ## Using the view helpers (Rails only!)
 
