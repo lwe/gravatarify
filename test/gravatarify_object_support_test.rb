@@ -3,7 +3,7 @@ require 'gravatarify/base'
 require 'gravatarify/object_support'
 
 class GravatarifyObjectSupportTest < Test::Unit::TestCase
-  def setup; Gravatarify.options.clear end
+  def setup; reset_gravatarify! end
   
   context "#gravatarify" do
     should "add support for #gravatar_url to POROs (plain old ruby objects, yeah POJO sounds better!)" do

@@ -4,7 +4,7 @@ begin; require 'dm-core'; rescue LoadError; end
 require 'gravatarify'
 
 class GravatarifyIntegrationTest < Test::Unit::TestCase
-  def setup; Gravatarify.options.clear end
+  def setup; reset_gravatarify! end
 
   context "ActiveRecord::Base" do
     if defined?(ActiveRecord)    

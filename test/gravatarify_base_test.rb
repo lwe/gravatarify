@@ -8,10 +8,7 @@ end
 class GravatarifyBaseTest < Test::Unit::TestCase
   include Gravatarify::Base
   
-  def setup
-    # just ensure that no global options are defined when starting next test
-    Gravatarify.options.clear
-  end
+  def setup; reset_gravatarify! end
     
   context "#build_gravatar_url, but without any options yet" do
     should "generate correct url for hash without options" do

@@ -9,7 +9,7 @@ class GravatarifyViewHelperTest < Test::Unit::TestCase
   
   def setup
     # just ensure that no global options are defined when starting next test
-    Gravatarify.options.clear
+    reset_gravatarify!
   end
   
   context "#gravatar_tag helper" do
