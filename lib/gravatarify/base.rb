@@ -2,9 +2,11 @@ require 'digest/md5'
 require 'cgi'
 
 module Gravatarify
+  # Subdomains used for balancing
+  GRAVATAR_SUBDOMAINS = %w{ 0 1 2 www } 
   
-  # Hosts used for balancing
-  GRAVATAR_HOSTS = %w{ 0 1 2 www }
+  # Fallback if no subdomain is found
+  GRAVATAR_DEFAULT_SUBDOMAIN = 'www'
   
   # If no size is specified, gravatar.com returns 80x80px images
   GRAVATAR_DEFAULT_SIZE = 80
@@ -18,8 +20,43 @@ module Gravatarify
   # Hash of :ultra_long_option_name => 'abbrevated option'
   GRAVATAR_ABBREV_OPTIONS = { :default => 'd', :rating => 'r', :size => 's' }
   
-  # Options which can be globally overriden by the application
-  def self.options; @options ||= {} end
+  class << self
+    # Globally define options which are then merged on every call to
+    # +build_gravatar_url+, this is useful to e.g. define the default image.
+    #
+    # Setting global options should be done (for Rails apps) in an initializer:
+    #
+    #     # set the default image using a Proc
+    #     Gravatarify.options[:default] = Proc.new { |*args| "http://example.com/avatar-#{args.first[:size] || 80}.jpg" }
+    #
+    #     # or set a custom default rating
+    #     Gravatarify.options[:rating] = :R
+    #
+    def options; @options ||= {} end
+  
+    # Globally overide subdomains used to build gravatar urls, normally
+    # +gravatarify+ picks from either +0.gravatar.com+, +1.gravatar.com+,
+    # +2.gravatar.com+ or +www.gravatar.com+ when building hosts, to use a custom
+    # set of subdomains (or none!) do something like:
+    #
+    #     Gravatarify.subdomains = %w{ 0 1 } # only use 0.gravatar.com and 1.gravatar.com
+    #
+    #     Gravatarify.subdomain = 'www' # only use www! (PS: subdomain= is an alias)
+    #
+    def subdomains=(subdomains) @subdomains = [*subdomains] end
+    alias_method :subdomain=, :subdomains=
+    
+    # Shortcut method to reset subdomains to only build +www.gravatar.com+ urls,
+    # i.e. disable host balancing!
+    def use_www_only!; self.subdomains = %w{ www } end
+
+    # Access currently defined subdomains, defaults are +GRAVTAR_SUBDOMAINS+.
+    def subdomains; @subdomains ||= GRAVATAR_SUBDOMAINS end
+    
+    # Get subdomain for supplied string or returns +GRAVATAR_DEFAULT_SUBDOMAIN+ if none is
+    # defined.
+    def subdomain(str); subdomains[str.hash % subdomains.size] || GRAVATAR_DEFAULT_SUBDOMAIN end
+  end
   
   # Provides core support to build gravatar urls based on supplied e-mail strings.
   module Base
@@ -70,7 +107,7 @@ module Gravatarify
     private
       def build_gravatar_host(str_hash, secure = false)
         secure = secure.call(self) if secure.respond_to?(:call)
-        secure ? "https://secure.gravatar.com" : "http://#{GRAVATAR_HOSTS[str_hash.hash % GRAVATAR_HOSTS.size] || 'www'}.gravatar.com"        
+        secure ? "https://secure.gravatar.com" : "http://#{Gravatarify.subdomain(str_hash)}.gravatar.com"        
       end
     
       def build_gravatar_options(url_options = {})
