@@ -39,7 +39,7 @@ module Gravatarify
     # +2.gravatar.com+ or +www.gravatar.com+ when building hosts, to use a custom
     # set of subdomains (or none!) do something like:
     #
-    #     Gravatarify.subdomains = %w{ 0 1 } # only use 0.gravatar.com and 1.gravatar.com
+    #     Gravatarify.subdomains = %w{ 0 www } # only use 0.gravatar.com and www.gravatar.com
     #
     #     Gravatarify.subdomain = 'www' # only use www! (PS: subdomain= is an alias)
     #
