@@ -1,3 +1,5 @@
+# The view helper, especially for the +gravatar_tag+ helper, requires
+# rails!
 module Gravatarify::ViewHelper
   include Gravatarify::Base
 
