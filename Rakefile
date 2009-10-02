@@ -2,6 +2,10 @@ require 'rake'
 require 'rake/testtask'
 require 'yard'
 
+def gravatarify_version
+  @gravatarify_version ||= (tmp = YAML.load(File.read('VERSION.yml'))) && [tmp[:major], tmp[:minor], tmp[:patch]] * '.'
+end
+
 desc 'Default: run unit tests.'
 task :default => :test
 
@@ -18,7 +22,7 @@ YARD::Rake::YardocTask.new(:doc) do |t|
   t.files = ['lib/**/*.rb']
   t.options = [
       "--readme", "README.md",
-      "--title", "Gravatarify API Documentation"
+      "--title", "gravatarify (v#{gravatarify_version}) API Documentation"
   ]
 end
 
@@ -26,10 +30,17 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = "gravatarify"
-    gemspec.summary = "Gravatar URLs for your ruby"
+    gemspec.summary = "Awesome gravatar support for ruby (and rails)."
+    description = <<-DESC
+    Yet another ruby/rails gravatar plugin - though, one with unique options like 
+    `Proc`s for default images, or support for gravatar.com's multiple host names.
+    DESC
+    gemspec.description = description.strip
     gemspec.email = "lukas.westermann@gmail.com"
     gemspec.homepage = "http://github.com/lwe/gravatarify"
     gemspec.authors = ["Lukas Westermann"]
+    gemspec.licenses = %w{LICENSE}
+    gemspec.extra_rdoc_files = %w{README.md}
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
@@ -40,6 +51,7 @@ desc 'Clean all generated files (.yardoc and doc/*)'
 task :clean do |t|
   FileUtils.rm_rf "doc"
   FileUtils.rm_rf "pkg"
+  FileUtils.rm_rf "gravatarify.gemspec"
   FileUtils.rm_rf ".yardoc"
 end
 
