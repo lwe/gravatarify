@@ -106,7 +106,6 @@ class:
 Tadaaa! Works exactly like the model helpers, so it's now possible to call `gravatar_url` on instances
 of `PoroUser`.
 
-<a id="l_roots"/>
 ## Back to the roots?
 
 No need for sophisticated stuff like view helpers and ActiveRecord integration, want to go back to the roots?
