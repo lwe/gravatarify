@@ -1,6 +1,7 @@
 require 'test_helper'
 require 'active_support'
 require 'action_view/helpers'
+require 'gravatarify'
 require 'gravatarify/view_helper'
 
 class GravatarifyViewHelperTest < Test::Unit::TestCase
