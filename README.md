@@ -6,9 +6,9 @@ the multiple host names supported by gravatar.com (great when displaying lots of
 
 And it integrates seamlessly with Rails, Merb and even plain old Ruby.
 
-- **Source**: [http://github.com/lwe/gravatarify](http://github.com/lwe/gravatarify)
-- **Docs**:   [http://rdoc.info/projects/lwe/gravatarify](http://rdoc.info/projects/lwe/gravatarify)
-- **Gem**:    [http://gemcutter.org/gems/gravatarify](http://gemcutter.org/gems/gravatarify)
+- **Source**: <http://github.com/lwe/gravatarify>
+- **Docs**:   <http://rdoc.info/projects/lwe/gravatarify>
+- **Gem**:    <http://gemcutter.org/gems/gravatarify>
 
 ## Install
 
@@ -31,13 +31,13 @@ and then `require 'gravatarify'` it.
 
 This library provides...
 
- * ...object/model helpers, so that an object responds to `gravatar_url`, see [using the model helpers](#l_model_helpers).
+ * ...object/model helpers, so that an object responds to `gravatar_url`, see "Using the model helpers"
    Works also very well with plain old ruby objects.
- * ...Rails view helpers, namely `gravatar_url` and `gravatar_tag`, see [using the view helpers](#l_view_helpers). This is rails only though!
+ * ...Rails view helpers, namely `gravatar_url` and `gravatar_tag`, see "Using the view helpers". This is rails only though!
  * ...and finally, a base module which provides the gravatar url generation, ready to be integrated into
-   custom helpers, plain ruby code or whatever, see [back to the roots](#l_roots)
+   custom helpers, plain ruby code or whatever, see "Back to the roots".
 
-<h2 id="l_view_helpers">Using the view helpers (Rails only!)</h2>
+## Using the view helpers (Rails only!)
 
 Probably one of the easiest ways to add support for gravatar images is with the included view helpers:
 
@@ -57,7 +57,6 @@ Using rails `image_tag` to create an `<img/>`-tag with `gravatar_url`. It's impo
 also an object can be passed to `gravatar_url`, if it responds to either `email` or `mail`. If not (like
 in the example above), the email address must be passed in.
 
-<a id="l_model_helpers"/>
 ## Using the model helpers
 
 A very simple method to add `gravatar_url` support to models is by using the `gravatarify` class method.
