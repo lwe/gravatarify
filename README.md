@@ -4,15 +4,19 @@ Removes any hassles building those pesky gravatar urls, it's not there arent any
 [there](http://github.com/chrislloyd/gravtastic), but none seem to support stuff like `Proc`s for the default picture url, or
 the multiple host names supported by gravatar.com (great when displaying lots of avatars).
 
-Best of it? It works with Rails, probably Merb and even plain old Ruby :)
+And it integrates seamlessly with Rails, Merb and even plain old Ruby.
+
+- **Source**: [http://github.com/lwe/gravatarify](http://github.com/lwe/gravatarify)
+- **Docs**:   [http://rdoc.info/projects/lwe/gravatarify](http://rdoc.info/projects/lwe/gravatarify)
+- **Gem**:    [http://gemcutter.org/gems/gravatarify](http://gemcutter.org/gems/gravatarify)
 
 ## Install
 
 Just install the gem (ensure you have gemcutter in your sources!)
 
-    sudo gem install gravatarify
+    [sudo] gem install gravatarify
    
-Ready to go! Using Rails? Either add (to `config/environment.rb`):
+Ready to go! Using Rails? Either add as gem (in `config/environment.rb`):
 
     config.gem 'gravatarify', :source => 'http://gemcutter.org'
     
@@ -21,31 +25,43 @@ or install as Rails plugin:
     ./script/plugin install git://github.com/lwe/gravatarify.git
     
 Of course it's also possible to just add the library onto the `$LOAD_PATH`
-and then it (`require 'gravatarify'`).
+and then `require 'gravatarify'` it.
 
+# Usage
+
+This library provides...
+
+ * ...object/model helpers, so that an object responds to `gravatar_url`, see [using the model helpers](#l_model_helpers).
+   Works also very well with plain old ruby objects.
+ * ...Rails view helpers, namely `gravatar_url` and `gravatar_tag`, see [using the view helpers](#l_view_helpers). This is rails only though!
+ * ...and finally, a base module which provides the gravatar url generation, ready to be integrated into
+   custom helpers, plain ruby code or whatever, see [back to the roots](#l_roots)
+
+<a id="l_view_helpers"/>
 ## Using the view helpers (Rails only!)
 
 Probably one of the easiest ways to add support for gravatar images is with the included view helpers:
 
     <%= gravatar_tag @user %> # assumes @user has email or mail field!
-    
+
 This builds a neat `<img/>`-tag, if you need to pass in stuff like the size etc. just:
 
     <%= gravatar_tag @user, :size => 25, :rating => :x, :class => "gravatar" %>
-    
+
 This will display an "X" rated avatar which is 25x25 pixel in size and the image tag will have the class `"gravatar"`.
 If more control is required, or just the URL, well then go ahead and use `gravatar_url` instead:
 
-     <%= image_tag gravatar_url(@user.author_email, :size => 16), :size => "16x16",
-          :alt => @user.name, :class => "avatar avatar-16"}/
-    
+    <%= image_tag gravatar_url(@user.author_email, :size => 16), :size => "16x16",
+         :alt => @user.name, :class => "avatar avatar-16"}/
+
 Using rails `image_tag` to create an `<img/>`-tag with `gravatar_url`. It's important to know that 
 also an object can be passed to `gravatar_url`, if it responds to either `email` or `mail`. If not (like
 in the example above), the email address must be passed in.
 
+<a id="l_model_helpers"/>
 ## Using the model helpers
 
-Another way (especially cool) for models is to do:
+A very simple method to add `gravatar_url` support to models is by using the `gravatarify` class method.
 
     class User < ActiveRecord::Base
      gravatarify
@@ -92,6 +108,7 @@ class:
 Tadaaa! Works exactly like the model helpers, so it's now possible to call `gravatar_url` on instances
 of `PoroUser`.
 
+<a id="l_roots"/>
 ## Back to the roots?
 
 No need for sophisticated stuff like view helpers and ActiveRecord integration, want to go back to the roots?
@@ -175,6 +192,27 @@ Into the block is passed the options hash and as second parameter the object its
 
 Not only the `:default` option accepts a Proc, but also `:secure`, can be useful to handle cases where
 it should evaluate against `request.ssl?` for example.
+
+## About the code
+
+Eventhough this library has less than 100 LOC, it's split into four files, maybe a bit
+of an overkill, though I like neat and tidy classes :)
+
+    lib/gravatarify.rb                      # loads the other files from lib/gravatarify
+                                            # and hooks the necessary modules into
+                                            # ActionView, ActiveRecord and DataMapper
+                                            # (if available)
+                                            
+    lib/gravatarify/base.rb                 # Provides all logic required to generate
+                                            # gravatar.com urls from an email address.
+                                            # Check out Gravatarify::Base.build_gravatar_url,
+                                            # this is the absolute core method.
+                                            
+    lib/gravatarify/object_support.rb       # Module which (when) included provides the
+                                            # gravatarify class method to add a gravatar_url
+                                            # to any object.
+                                            
+    lib/gravatarify/view_helper.rb          # Defines rails view helpers.
 
 ## Licence
 
