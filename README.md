@@ -37,7 +37,7 @@ This library provides...
  * ...and finally, a base module which provides the gravatar url generation, ready to be integrated into
    custom helpers, plain ruby code or whatever, see [back to the roots](#l_roots)
 
-<a id="l_view_helpers"/>
+<a id="l_view_helpers"></a>
 ## Using the view helpers (Rails only!)
 
 Probably one of the easiest ways to add support for gravatar images is with the included view helpers:
