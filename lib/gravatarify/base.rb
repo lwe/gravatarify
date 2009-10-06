@@ -1,5 +1,5 @@
 require 'digest/md5'
-require 'cgi'
+begin; require 'rack/utils'; rescue LoadError; require 'cgi' end
 
 module Gravatarify
   # Subdomains used for balancing
@@ -56,6 +56,8 @@ module Gravatarify
     # Get subdomain for supplied string or returns +GRAVATAR_DEFAULT_SUBDOMAIN+ if none is
     # defined.
     def subdomain(str); subdomains[str.hash % subdomains.size] || GRAVATAR_DEFAULT_SUBDOMAIN end
+    
+    def escape(str); defined?(Rack::Utils) ? Rack::Utils.escape(str) : CGI.escape(str) end
   end
   
   # Provides core support to build gravatar urls based on supplied e-mail strings.
@@ -126,7 +128,7 @@ module Gravatarify
         url_options.each_pair do |key, value|
           key = GRAVATAR_ABBREV_OPTIONS[key] if GRAVATAR_ABBREV_OPTIONS.include?(key) # shorten key!
           value = value.call(url_options, self) if key.to_s == 'd' and value.respond_to?(:call)
-          params << "#{CGI.escape(key.to_s)}=#{CGI.escape(value.to_s)}" if value
+          params << "#{Gravatarify.escape(key.to_s)}=#{Gravatarify.escape(value.to_s)}" if value
         end
         "?#{params.sort * '&'}" unless params.empty?
       end
