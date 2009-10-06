@@ -107,11 +107,20 @@ module Gravatarify
     end
   
     private
+      # Builds gravatar host name from supplied e-mail hash.
+      # Ensures that for the same +str_hash+ always the same subdomain is used.
+      #
+      # @param [String] str_hash email, as hashed string as described in gravatar.com implementation specs
+      # @param [Boolean, Proc] secure if set to +true+ then uses gravatars secure host (<tt>https://secure.gravatar.com</tt>),
+      #        else that subdomain magic. If it's passed in a +Proc+, it's evaluated and the result (+true+/+false+) is used
+      #        for the same decicion.
+      # @return [String] Protocol and hostname (like <tt>http://www.gravatar.com</tt>), without trailing slash.
       def build_gravatar_host(str_hash, secure = false)
         secure = secure.call(self) if secure.respond_to?(:call)
         secure ? "https://secure.gravatar.com" : "http://#{Gravatarify.subdomain(str_hash)}.gravatar.com"        
       end
     
+      # Builds a query string from all passed in options.
       def build_gravatar_options(url_options = {})
         params = []
         url_options.each_pair do |key, value|
