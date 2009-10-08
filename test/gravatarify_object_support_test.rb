@@ -95,5 +95,20 @@ class GravatarifyObjectSupportTest < Test::Unit::TestCase
       assert_equal "http://2.gravatar.com/avatar/4979dd9653e759c78a81d4997f56bae2.jpg?d=http%3A%2F%2Finitech.com%2Favatar-20.jpg&s=20", poro.new.gravatar_url(:size => 20)
       assert_equal "http://0.gravatar.com/avatar/cb7865556d41a3d800ae7dbb31d51d54.jpg?d=http%3A%2F%2Finitech.com%2Favatar-25.jpg&s=25", poro.new.employee_gravatar_url(:size => 25)
     end
+    
+    should "pass in object as second parameter, not supplied string" do
+      poro = Class.new do
+        include Gravatarify::ObjectSupport
+        gravatarify :default => Proc.new { |opts, obj| "http://initech.com/avatar#{obj.respond_to?(:gender) && obj.gender == :female ? '_girl' : ''}.jpg" }
+        def email; "peter.gibbons@initech.com" end
+        def gender; :male end
+      end
+      assert_equal "http://0.gravatar.com/avatar/cb7865556d41a3d800ae7dbb31d51d54.jpg?d=http%3A%2F%2Finitech.com%2Favatar.jpg&s=25", poro.new.gravatar_url(:s => 25)
+      poro_girl = Class.new(poro) do
+        def email; "jane@initech.com" end
+        def gender; :female end
+      end
+      assert_equal "http://1.gravatar.com/avatar/9b78f3f45cf32d7c52d304a63f6aef06.jpg?d=http%3A%2F%2Finitech.com%2Favatar_girl.jpg&s=35", poro_girl.new.gravatar_url(:s => 35)
+    end
   end
 end

@@ -83,6 +83,19 @@ class GravatarifyBaseTest < Test::Unit::TestCase
       
       assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", build_gravatar_url(obj)      
     end
+    
+    should "handle Procs as :default and pass in the 'object' as second parameter" do
+      default = Proc.new { |options, object| "http://example.com/gravatar#{object.respond_to?(:female?) && object.female? ? '_girl' : ''}.jpg" }
+      girl = Object.new
+      mock(girl).email { "bella@gmail.com" }
+      mock(girl).female? { true }      
+      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=http%3A%2F%2Fexample.com%2Fgravatar_girl.jpg", build_gravatar_url(girl, :default => default)
+      
+      boy = Object.new
+      mock(boy).email { "hans@gmail.com" }
+      mock(boy).female? { false }
+      assert_equal "http://www.gravatar.com/avatar/b6987c8f1d734e684cf9721970b906e5.jpg?d=http%3A%2F%2Fexample.com%2Fgravatar.jpg", build_gravatar_url(boy, :default => default)      
+    end    
   end
   
   context "Gravatar hosts support" do

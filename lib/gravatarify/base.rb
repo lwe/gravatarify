@@ -105,7 +105,7 @@ module Gravatarify
       email_hash = Digest::MD5.hexdigest(Base.get_smart_email_from(email).strip.downcase)
       
       build_gravatar_host(email_hash, url_options.delete(:secure)) <<
-            "/avatar/#{email_hash}.#{url_options.delete(:filetype) || GRAVATAR_DEFAULT_FILETYPE}#{build_gravatar_options(url_options)}"
+            "/avatar/#{email_hash}.#{url_options.delete(:filetype) || GRAVATAR_DEFAULT_FILETYPE}#{build_gravatar_options(email, url_options)}"
     end
   
     private
@@ -123,11 +123,11 @@ module Gravatarify
       end
     
       # Builds a query string from all passed in options.
-      def build_gravatar_options(url_options = {})
+      def build_gravatar_options(source, url_options = {})
         params = []
         url_options.each_pair do |key, value|
           key = GRAVATAR_ABBREV_OPTIONS[key] if GRAVATAR_ABBREV_OPTIONS.include?(key) # shorten key!
-          value = value.call(url_options, self) if key.to_s == 'd' and value.respond_to?(:call)
+          value = value.call(url_options, source.is_a?(String) ? self : source) if key.to_s == 'd' and value.respond_to?(:call)
           params << "#{Gravatarify.escape(key.to_s)}=#{Gravatarify.escape(value.to_s)}" if value
         end
         "?#{params.sort * '&'}" unless params.empty?

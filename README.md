@@ -184,8 +184,13 @@ to generate an image url, based on the request size:
     @user.gravatar_url(:size => 16)
     # => "http://0.gravatar.com/...jpg?d=http%3A%2F%2Fexample.com%2Fgravatar-16.jpg&s=16"
     
-Into the block is passed the options hash and as second parameter the object itself, so in the example above
-`object` would be `@user`, might be useful!? Never used it, so I might remove the second argument...
+Into the block is passed the options hash and as second parameter the object itself, so it's possible to do stuff like
+
+    # doing stuff like showing default avatar based on gender...
+    @user = User.new(:gender => :female, :email => 'bella@gmail.com') # => @user.female? = true
+    
+    @user.gravatar_url :default => Proc.new { |opts, obj| "http://example.com/avatar#{obj.respond_to?(:female) && obj.female? ? '_female' : ''}.jpg" }
+    # => http://0.gravatar.com/...jpg?d=http%3A%2F%2Fexample.com%2Fgravatar_female.jpg
 
 Not only the `:default` option accepts a Proc, but also `:secure`, can be useful to handle cases where
 it should evaluate against `request.ssl?` for example.
