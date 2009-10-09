@@ -4,7 +4,7 @@ Removes any hassles building those pesky gravatar urls, it's not there arent any
 [there](http://github.com/chrislloyd/gravtastic), but none seem to support stuff like `Proc`s for the default picture url, or
 the multiple host names supported by gravatar.com (great when displaying lots of avatars).
 
-And it integrates seamlessly with Rails, Merb and even plain old Ruby.
+And it integrates seamlessly with Rails, DataMapper and even plain old Ruby.
 
 - **Source**: <http://github.com/lwe/gravatarify>
 - **Docs**:   <http://rdoc.info/projects/lwe/gravatarify>
@@ -20,7 +20,7 @@ Ready to go! Using Rails? Either add as gem (in `config/environment.rb`):
 
     config.gem 'gravatarify', :source => 'http://gemcutter.org'
     
-or install as Rails plugin:
+or install as Rails plugin (plugin only compatible with Rails 2.2+):
 
     ./script/plugin install git://github.com/lwe/gravatarify.git
     
