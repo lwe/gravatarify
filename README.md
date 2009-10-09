@@ -20,7 +20,7 @@ Ready to go! Using Rails? Either add as gem (in `config/environment.rb`):
 
     config.gem 'gravatarify', :source => 'http://gemcutter.org'
     
-or install as Rails plugin (plugin only compatible with Rails 2.2+):
+or install as Rails plugin:
 
     ./script/plugin install git://github.com/lwe/gravatarify.git
     
