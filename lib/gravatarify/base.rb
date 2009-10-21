@@ -57,7 +57,12 @@ module Gravatarify
     # defined.
     def subdomain(str); subdomains[str.hash % subdomains.size] || GRAVATAR_DEFAULT_SUBDOMAIN end
     
-    def escape(str); defined?(Rack::Utils) ? Rack::Utils.escape(str) : CGI.escape(str) end
+    # Helper method to escape string using either <tt>Rack::Utils</tt> if available or else
+    # fallback to <tt>CGI#escape</tt>.
+    def escape(str)
+      str = str.to_s unless str.is_a?(String) # convert to string!
+      defined?(Rack::Utils) ? Rack::Utils.escape(str) : CGI.escape(str)
+    end
   end
   
   # Provides core support to build gravatar urls based on supplied e-mail strings.
@@ -128,7 +133,7 @@ module Gravatarify
         url_options.each_pair do |key, value|
           key = GRAVATAR_ABBREV_OPTIONS[key] if GRAVATAR_ABBREV_OPTIONS.include?(key) # shorten key!
           value = value.call(url_options, source.is_a?(String) ? self : source) if key.to_s == 'd' and value.respond_to?(:call)
-          params << "#{Gravatarify.escape(key.to_s)}=#{Gravatarify.escape(value.to_s)}" if value
+          params << "#{Gravatarify.escape(key)}=#{Gravatarify.escape(value)}" if value
         end
         "?#{params.sort * '&'}" unless params.empty?
       end
