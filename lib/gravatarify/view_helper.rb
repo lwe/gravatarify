@@ -4,7 +4,13 @@ module Gravatarify::ViewHelper
   include Gravatarify::Base
 
   # Ensure proper gravatar_url method is available!
-  alias_method :gravatar_url, :build_gravatar_url
+  #alias_method :gravatar_url, :build_gravatar_url
+  def gravatar_url(email, options = {})
+    escape = options.delete(:escape)
+    url = build_gravatar_url(email, options)
+    url = (defined?(Rack) ? Rack::Utils.escape_html(url) : CGI.escapeHTML(url)) unless escape == false
+    url
+  end
   
   # Create <img .../> tag by passing +email+ to +gravatar_url+, is based
   # on rails +image_tag+ helper method.
@@ -19,6 +25,6 @@ module Gravatarify::ViewHelper
     url_options = options.symbolize_keys.reject { |key,value| !Gravatarify::GRAVATAR_OPTIONS.include?(key) }
     options[:alt] ||= Gravatarify::Base.get_smart_email_from(email) # use email as :alt attribute
     options[:width] = options[:height] = (url_options[:size] || Gravatarify::GRAVATAR_DEFAULT_SIZE) # customize size
-    image_tag(email.respond_to?(:gravatar_url) ? email.gravatar_url(url_options) : gravatar_url(email, url_options), options)
+    image_tag(email.respond_to?(:gravatar_url) ? email.gravatar_url(url_options) : build_gravatar_url(email, url_options), options)
   end
 end
