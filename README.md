@@ -247,6 +247,12 @@ of an overkill, though I like neat and tidy classes :)
                                             # to any object.
                                             
     lib/gravatarify/helper.rb               # Defines those view helpers, mainly gravatar_tag
+    
+### Contribute
+
+ 1. Fork the project and hack away
+ 2. Ensure that the changes are well tested
+ 3. Send me a pull request
 
 Licence
 =======
