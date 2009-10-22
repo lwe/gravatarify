@@ -46,13 +46,9 @@ class GravatarifyViewHelperTest < Test::Unit::TestCase
   end
   
   context "#gravatar_url" do
-    should "return html-escaped URLs by default, so they can be used directly in HTML views without worrying about entities etc." do
+    should "return same urls as build_gravatar_url" do
       assert_equal 'http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg', gravatar_url('bella@gmail.com')
-      assert_equal 'http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=x&amp;s=16', gravatar_url('bella@gmail.com', :d => 'x', :s => 16)      
-    end
-    
-    should "not create html-escaped urls if passed in :escape => false" do
-      assert_equal 'http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=x&s=16', gravatar_url('bella@gmail.com', :d => 'x', :s => 16, :escape => false)      
-    end
+      assert_equal 'http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=x&s=16', gravatar_url('bella@gmail.com', :d => 'x', :s => 16)      
+    end    
   end
 end
