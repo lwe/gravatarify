@@ -4,7 +4,7 @@
 # custom implementations, just include Gravatarify::Base.
 require 'gravatarify/base'
 require 'gravatarify/object_support'
-require 'gravatarify/helpers'
+require 'gravatarify/helper'
 
 # setup for AR und DataMapper, note: DataMapper yet untested :) but I suppose it works, because
 # it works as expected on plain old ruby objects!
@@ -12,7 +12,4 @@ ActiveRecord::Base.send(:include, Gravatarify::ObjectSupport) if defined?(Active
 DataMapper::Model.append_inclusions(Gravatarify::ObjectSupport) if defined?(DataMapper)
 
 # and HAML support (if defined)
-if defined?(Haml)
-  require 'gravatarify/helpers/haml'
-  Haml::Helpers.send(:include, Gravatarify::Helpers::Haml)
-end
+Haml::Helpers.send(:include, Gravatarify::Helper) if defined?(Haml)
