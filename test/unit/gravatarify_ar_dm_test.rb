@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class GravatarifyIntegrationTest < Test::Unit::TestCase
+class GravatarifyArDmTest < Test::Unit::TestCase
   def setup; reset_gravatarify! end
 
   context "ActiveRecord::Base" do

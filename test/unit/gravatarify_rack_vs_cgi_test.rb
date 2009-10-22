@@ -1,8 +1,9 @@
 require 'test_helper'
+require 'cgi'
 
 class GravatarifyRackVsCgiTest < Test::Unit::TestCase
   include Gravatarify::Base
-  
+
   # Reload Rack::Utils
   def teardown
     begin; require('rack/utils'); rescue LoadError; end
