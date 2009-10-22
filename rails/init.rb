@@ -1,7 +1,7 @@
 require 'gravatarify'
 
 # if HAML not yet loaded (due to load order), yet plugin exists
-if !defined?(Haml) and Rails.root.join('vendor', 'plugins', 'haml').exists?
+if !defined?(Haml) and File.exists?(Rails.root.join('vendor', 'plugins', 'haml'))
   require 'gravatarify/helpers/haml'
   ActionView::Base.send(:include, Gravatarify::Helpers::Haml)
 end
