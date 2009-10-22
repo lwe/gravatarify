@@ -4,6 +4,7 @@
 # custom implementations, just include Gravatarify::Base.
 require 'gravatarify/base'
 require 'gravatarify/object_support'
+require 'gravatarify/helpers'
 
 # setup for AR und DataMapper, note: DataMapper yet untested :) but I suppose it works, because
 # it works as expected on plain old ruby objects!
