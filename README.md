@@ -163,10 +163,21 @@ Yeah, that should work :). See {Gravatarify::Base#build_gravatar_url} for more i
   <tr>
     <td><tt>:filetype</tt></td>
     <td>String, Symbol</td>
-    <td>Change image type, gravatar.com supports <tt>:gif</tt>, <tt>:png</tt> and <tt>:jpg</tt>.</td>
+    <td>Change image type, gravatar.com supports <tt>:gif</tt>, <tt>:png</tt> and <tt>:jpg</tt>. If set to <tt>false</tt> 
+      then a URL without an extension will be built (and gravatar.com then returns a JPG image).</td>
     <td><tt>:jpg</tt></td>
   </tr>
 </table>
+
+To options globally, access the `Gravatarify.options` hash and set any options which should apply to all
+gravatar urls there. Of course all settings can be overridden locally:
+
+    # disable suffix and set default size to 16x16px
+    Gravatarify.options[:filetype] = false
+    Gravatarify.options[:size] = 16
+    
+    gravatar_url(@user.email) # => http://0.gravatar.com/avatar/..f93ff1e?s=16
+    gravatar_url(@user.email, :filetype => :png) # => http://0.gravatar.com/avatar/..f93ff1e.png?s=16
 
 ## Not yet enough?
 
