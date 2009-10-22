@@ -14,7 +14,7 @@ displaying lots of avatars).
 Ready, Set, Go!
 ---------------
 
-_READY:_ Install gravatarify as a gem (requires gemcutter):
+**READY:** Install gravatarify as a gem (requires gemcutter):
 
     [sudo] gem install gravatarify
     
@@ -22,11 +22,11 @@ or as Rails plugin:
     
     ./script/plugin install git://github.com/lwe/gravatarify.git
     
-_SET:_ When using as Rails plugin, skip this step. Anyhow, just ensure that when installed as a gem
+**SET:** When using as Rails plugin, skip this step. Anyhow, just ensure that when installed as a gem
 it's bundled using `bundler` or defined in `config/environment.rb`, or just that it's on the `$LOAD_PATH`
 and then `require 'gravatarify'`'d somehow.
 
-_GO:_ Use it! When using Rails or Haml then just give it a email and it will return the gravatar url:
+**GO:** Use it! When using Rails or Haml then just give it a email and it will return the gravatar url:
 
     # creates an 20x20 pixel <img/> tag in your Rails ERB views:
     <%= gravatar_tag @user.email, :size => 20 %>
@@ -35,7 +35,7 @@ _GO:_ Use it! When using Rails or Haml then just give it a email and it will ret
     # (Note: how it's possible to skip the email attribute, btw - that's a feature)
     %img{ gravatar_attrs(@user, :size => 20) }/
     
-_Need more?_ Allright, that was just the quickstart, to get up and running with ease. However, this library provides
+**More!?** Allright, that was just the quickstart, to get up and running with ease. However, this library provides
 quite a bit more, like:
 
  * ...view helpers, namely `gravatar_url` and `gravatar_tag`, see "Using the view helpers".
