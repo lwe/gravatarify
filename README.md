@@ -1,82 +1,102 @@
-# Gravatarify
-    
-Removes any hassles building those pesky gravatar urls, it's not there arent any alternatives [out](http://github.com/mdeering/gravitar_image_tag),
-[there](http://github.com/chrislloyd/gravtastic), but none seem to support stuff like `Proc`s for the default picture url, or
-the multiple host names supported by gravatar.com (great when displaying lots of avatars).
+Gravatarify
+===========
 
-And it integrates seamlessly with Rails, DataMapper and even plain old Ruby.
+Hassle-free construction of those pesky gravatar.com urls and has out-of-the-box support for
+Rails, DataMapper and Haml. It's not that there aren't any alternatives yet [out](http://github.com/mdeering/gravitar_image_tag),
+[there](http://github.com/chrislloyd/gravtastic), but none seem to support stuff like `Proc`s
+for the default picture url, or the multiple host names supported by gravatar.com (great when
+displaying lots of avatars).
 
 - **Source**: <http://github.com/lwe/gravatarify>
 - **Docs**:   <http://rdoc.info/projects/lwe/gravatarify>
 - **Gem**:    <http://gemcutter.org/gems/gravatarify>
 
-## Install
+Ready, Set, Go!
+---------------
 
-Just install the gem (ensure you have gemcutter in your sources!)
+_READY:_ Install gravatarify as a gem (requires gemcutter):
 
     [sudo] gem install gravatarify
-   
-Ready to go! Using Rails? Either add as gem (in `config/environment.rb`):
-
-    config.gem 'gravatarify', :source => 'http://gemcutter.org'
     
-or install as Rails plugin:
-
+or as Rails plugin: 
+    
     ./script/plugin install git://github.com/lwe/gravatarify.git
     
-Of course it's also possible to just add the library onto the `$LOAD_PATH`
-and then `require 'gravatarify'` it.
+_SET:_ When using as Rails plugin, skip this step. Anyhow, just ensure that when installed as a gem
+it's bundled using `bundler` or defined in `config/environment.rb`, or just that it's on the `$LOAD_PATH`
+and then `require 'gravatarify'`'d somehow.
 
-# Usage
+_GO:_ Use it! When using Rails or Haml then just give it a email and it will return the gravatar url:
 
-This library provides...
+    # creates an 20x20 pixel <img/> tag in your Rails ERB views:
+    <%= gravatar_tag @user.email, :size => 20 %>
+    
+    # or in HAML views
+    # (Note: how it's possible to skip the email attribute, btw - that's a feature)
+    %img{ gravatar_attrs(@user, :size => 20) }/
+    
+_Need more?_ Allright, that was just the quickstart, to get up and running with ease. However, this library provides
+quite a bit more, like:
 
+ * ...view helpers, namely `gravatar_url` and `gravatar_tag`, see "Using the view helpers".
  * ...object/model helpers, so that an object responds to `gravatar_url`, see "Using the model helpers"
    Works also very well with plain old ruby objects.
- * ...Rails view helpers, namely `gravatar_url` and `gravatar_tag`, see "Using the view helpers". This is rails only though!
  * ...and finally, a base module which provides the gravatar url generation, ready to be integrated into
    custom helpers, plain ruby code or whatever, see "Back to the roots".
 
-## Using the view helpers (Rails only!)
+Using the view helpers
+----------------------
 
-Probably one of the easiest ways to add support for gravatar images is with the included view helpers:
+Probably one of the easiest ways to add support for gravatar images is with the included view helpers.
+When using Rails or HAML these should be automatically available, if not do something like:
 
-    <%= gravatar_tag @user %> # assumes @user has email or mail field!
+    # e.g. for Sinatra
+    helpers Gravatarify::Helper
+
+    # or include for Haml
+    Haml::Helpers.send(:include, Gravatarify::Helper)
+
+    # NOTE: basically just include the Gravatarify::Helper module
+
+This then provides three helper methods: `gravatar_url`, `gravatar_attrs` and `gravatar_tag`.
+To just build a simple `<img/>` tag, pass in an object (if it responds to `email` or `mail`)
+or a string containg the e-mail address:
+
+    <%= gravatar_tag @user %> # => assumes @user has email or mail field!
 
 This builds a neat `<img/>`-tag, if you need to pass in stuff like the size etc. just:
+To display an "X" rated avatar which is 25x25 pixel in size and the `<img/>` tag should have
+a class attribute, do:
 
     <%= gravatar_tag @user, :size => 25, :rating => :x, :class => "gravatar" %>
 
-This will display an "X" rated avatar which is 25x25 pixel in size and the image tag will have the class `"gravatar"`.
-If more control is required, or just the URL, well then go ahead and use `gravatar_url` instead:
+If more control is needed, or required to use URLs in JavaScript, resort to `gravatar_url`, which
+returns a string with the (unescaped) url:
 
     <%= image_tag gravatar_url(@user.author_email, :size => 16), :size => "16x16",
-         :alt => @user.name, :class => "avatar avatar-16"}/
-
-Using rails `image_tag` to create an `<img/>`-tag with `gravatar_url`. It's important to know that 
-also an object can be passed to `gravatar_url`, if it responds to either `email` or `mail`. If not (like
-in the example above), the email address must be passed in.
-
-## Using the model helpers
+        :alt => @user.name, :class => "avatar avatar-16" %>
+        
+Using the model helpers
+-----------------------
 
 A very simple method to add `gravatar_url` support to models is by using the `gravatarify` class method.
 
     class User < ActiveRecord::Base
-     gravatarify
+      gravatarify
     end
-   
+
 Thats it! Well, at least if the `User` model responds to `email` or `mail`. Then in the views all left to do is:
 
     <%= image_tag @user.gravatar_url %>
-   
+
 Neat, isn't it? Of course passing options works just like with the view helpers:
 
     <%= image_tag @user.gravatar_url(:size => 16, :rating => :r) %>
-   
+
 Defaults can even be passed to the `gravatarify` call, so no need to repeat them on every `gravatar_url` call.
 
     gravatarify :employee_mail, :size => 16, :rating => :r
-   
+
 All gravatars will now come from the `employee_mail` field, not the default `email` or `mail` field and be in 16x16px in size
 and have a rating of 'r'. Of course these can be overriden in calls to `gravatar_url` like before. Pretty cool is also the
 fact that an object can be passed directly to `gravatar_tag` if it responds to `gravatar_url`, like:
@@ -85,10 +105,10 @@ fact that an object can be passed directly to `gravatar_tag` if it responds to `
     class User < ActiveRecord::Base
       gravatarify :size => 16, :secure => true
     end
-    
+
     # view:
     <%= gravatar_tag @user %> # -> <img ... width="16" src="https://secure.gravatar..." height="16" />
-    
+
 The `gravatar_tag` looks if the object responds to `gravatar_url` and if so, just passes the options to it,
 it works also with plain old ruby objects, of course :)
 
@@ -110,14 +130,14 @@ of `PoroUser`.
 
 No need for sophisticated stuff like view helpers and ActiveRecord integration, want to go back to the roots?
 Then feel free to use `Gravatarify::Base#build_gravatar_url` directly.
-
-For example, want to use `build_gravatar_url` in a Sinatra app?
-
-    helpers Gravatarify::Base
     
-Yeah, that should work :). See {Gravatarify::Base#build_gravatar_url} for more informations and usage examples.
+When the ability to display image tags is required in different view frameworks (like liquid!?),
+then just ensure that `Gravatarify::Helper` is included in the framework in question.
+See {Gravatarify::Base#build_gravatar_url} and of course {Gravatarify::Helper}
+for more informations and usage examples.
 
-## Need more control?
+Need more control?
+==================
 
 <table>
   <tr>
@@ -179,7 +199,7 @@ gravatar urls there. Of course all settings can be overridden locally:
     gravatar_url(@user.email) # => http://0.gravatar.com/avatar/..f93ff1e?s=16
     gravatar_url(@user.email, :filetype => :png) # => http://0.gravatar.com/avatar/..f93ff1e.png?s=16
 
-## Not yet enough?
+### Not yet enough?
 
 The `:default` option can be passed in a `Proc`, so this is certainly useful to for example
 to generate an image url, based on the request size:
@@ -206,7 +226,8 @@ Into the block is passed the options hash and as second parameter the object its
 Not only the `:default` option accepts a Proc, but also `:secure`, can be useful to handle cases where
 it should evaluate against `request.ssl?` for example.
 
-## About the code
+About the code
+==============
 
 Eventhough this library has less than 100 LOC, it's split into four files, maybe a bit
 of an overkill, though I like neat and tidy classes :)
@@ -225,9 +246,10 @@ of an overkill, though I like neat and tidy classes :)
                                             # gravatarify class method to add a gravatar_url
                                             # to any object.
                                             
-    lib/gravatarify/view_helper.rb          # Defines rails view helpers.
+    lib/gravatarify/helper.rb               # Defines those view helpers, mainly gravatar_tag
 
-## Licence
+Licence
+=======
 
 Copyright (c) 2009 Lukas Westermann
 
