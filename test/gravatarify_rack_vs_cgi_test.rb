@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'gravatarify/base'
 
 class GravatarifyRackVsCgiTest < Test::Unit::TestCase
   include Gravatarify::Base

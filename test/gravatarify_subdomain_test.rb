@@ -2,7 +2,6 @@ require 'test_helper'
 require 'net/http'
 require 'net/https'
 require 'uri'
-require 'gravatarify/base'
 
 class GravatarifySubdomainTest < Test::Unit::TestCase
   include Gravatarify::Base

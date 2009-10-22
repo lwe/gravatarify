@@ -1,7 +1,4 @@
 require 'test_helper'
-begin; require 'activerecord'; rescue LoadError; end
-begin; require 'dm-core'; rescue LoadError; end
-require 'gravatarify'
 
 class GravatarifyIntegrationTest < Test::Unit::TestCase
   def setup; reset_gravatarify! end

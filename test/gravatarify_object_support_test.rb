@@ -1,6 +1,4 @@
 require 'test_helper'
-require 'gravatarify/base'
-require 'gravatarify/object_support'
 
 class PoroUser
   include Gravatarify::ObjectSupport
