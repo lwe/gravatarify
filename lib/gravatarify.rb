@@ -10,3 +10,9 @@ require 'gravatarify/helpers'
 # it works as expected on plain old ruby objects!
 ActiveRecord::Base.send(:include, Gravatarify::ObjectSupport) if defined?(ActiveRecord)
 DataMapper::Model.append_inclusions(Gravatarify::ObjectSupport) if defined?(DataMapper)
+
+# and HAML support (if defined)
+if defined?(Haml)
+  require 'gravatarify/helpers/haml'
+  Haml::Helpers.send(:include, Gravatarify::Helpers::Haml)
+end
