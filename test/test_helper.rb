@@ -3,6 +3,10 @@ require 'test/unit'
 require 'shoulda'
 require 'rr'
 
+require 'active_support'
+require 'action_view'
+require 'action_view/helpers'
+
 begin; require 'activerecord'; rescue LoadError; end
 begin; require 'dm-core'; rescue LoadError; end
 require 'gravatarify'

@@ -9,9 +9,9 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
     reset_gravatarify!
   end
 
-  context "#gravatar_attr" do
+  context "#gravatar_attrs" do
     should "return hash with :heigth, :width, :alt and :src defined" do
-      hash = gravatar_attr('bella@gmail.com', :size => 16)
+      hash = gravatar_attrs('bella@gmail.com', :size => 16)
       assert_equal 'http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?s=16', hash[:src]
       assert_equal 16, hash[:width]
       assert_equal 16, hash[:height]
@@ -19,7 +19,7 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
     end
     
     should "allow any param to be defined/overridden, except src, width and heigth" do
-      hash = gravatar_attr('bella@gmail.com', :size => 20, :height => 40, :alt => 'bella', :id => 'test', :title => 'something', :class => 'gravatar')
+      hash = gravatar_attrs('bella@gmail.com', :size => 20, :height => 40, :alt => 'bella', :id => 'test', :title => 'something', :class => 'gravatar')
       assert_equal 'http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?s=20', hash[:src]
       assert_equal 20, hash[:width]
       assert_equal 20, hash[:height]

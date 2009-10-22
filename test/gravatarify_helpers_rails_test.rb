@@ -1,9 +1,4 @@
 require 'test_helper'
-require 'active_support'
-require 'action_view'
-require 'action_view/helpers'
-
-require File.join(File.dirname(__FILE__), '..', 'rails', 'init')
 
 class RailsMockView < ActionView::Base
   include ActionView::Helpers

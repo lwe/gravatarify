@@ -5,9 +5,9 @@ module Gravatarify::Helpers::Haml
   #
   # Now it's as simple as doing something like:
   #
-  #    %img{ gravatar_attr(@user.mail) }/
+  #    %img{ gravatar_attrs(@user.mail, :size => 20) }/
   #
-  def gravatar_attr(email, options = {})
+  def gravatar_attrs(email, options = {})
     url_options = options.reject { |key,value| !Gravatarify::GRAVATAR_OPTIONS.include?(key) }
     options[:alt] ||= Gravatarify::Base.get_smart_email_from(email) # use email as :alt attribute
     options[:width] = options[:height] = (url_options[:size] || Gravatarify::GRAVATAR_DEFAULT_SIZE) # customize size
