@@ -32,6 +32,9 @@ module Gravatarify
     #     # or set a custom default rating
     #     Gravatarify.options[:rating] = :R
     #
+    #     # or disable adding an extension
+    #     Gravatarify.options[:filetype] = false
+    #
     def options; @options ||= {} end
   
     # Globally overide subdomains used to build gravatar urls, normally
@@ -108,9 +111,8 @@ module Gravatarify
       # FIXME: add symbolize_keys again, maybe just write custom method, so we do not depend on ActiveSupport magic...
       url_options = Gravatarify.options.merge(url_options)
       email_hash = Digest::MD5.hexdigest(Base.get_smart_email_from(email).strip.downcase)
-      
-      build_gravatar_host(email_hash, url_options.delete(:secure)) <<
-            "/avatar/#{email_hash}.#{url_options.delete(:filetype) || GRAVATAR_DEFAULT_FILETYPE}#{build_gravatar_options(email, url_options)}"
+      extension = url_options[:filetype] == false ? '' : ".#{url_options.delete(:filetype) || GRAVATAR_DEFAULT_FILETYPE}"
+      build_gravatar_host(email_hash, url_options.delete(:secure)) << "/avatar/#{email_hash}#{extension}#{build_gravatar_options(email, url_options)}"
     end
   
     private

@@ -51,6 +51,11 @@ class GravatarifyBaseTest < Test::Unit::TestCase
       assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.png", build_gravatar_url('bella@gmail.com', :filetype => :png)
     end
   
+    should "skip :filetype if set to false" do
+      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d", build_gravatar_url('bella@gmail.com', :filetype => false)      
+      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", build_gravatar_url('bella@gmail.com', :filetype => nil)      
+    end
+    
     should "handle Procs as :default, to easily generate default urls based on supplied :size" do
       default = Proc.new { |*args| "http://example.com/gravatar#{args.first[:size] ? '-' + args.first[:size].to_s : ''}.jpg" }
       assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=http%3A%2F%2Fexample.com%2Fgravatar.jpg",
@@ -141,6 +146,14 @@ class GravatarifyBaseTest < Test::Unit::TestCase
     should "ensure that default options can be overriden by passing options into build_gravatar_url call" do
       assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.gif?anything=else&d=http%3A%2F%2Fexample.com%2Fgravatar.jpg",
                     build_gravatar_url('bella@gmail.com', :anything => "else", :filetype => :gif)
+    end
+    
+    should "ensure that no filetypes are added when :filetype set to false, unless locally specified" do
+      Gravatarify.options[:filetype] = false
+      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d?anything=test&d=http%3A%2F%2Fexample.com%2Fgravatar.jpg",
+                    build_gravatar_url('bella@gmail.com')
+      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.png?anything=test&d=http%3A%2F%2Fexample.com%2Fgravatar.jpg",
+                    build_gravatar_url('bella@gmail.com', :filetype => 'png')
     end
   end
 end
