@@ -64,7 +64,7 @@ namespace :metrics do
     require 'code_statistics'
     dirs = {
       'Libraries' => 'lib',
-      'Unit tests' => 'test'
+      'Unit tests' => 'test/unit'
     }.map { |name,dir| [name, File.join(File.dirname(__FILE__), dir)] }
     CodeStatistics.new(*dirs).to_s
   end
@@ -73,7 +73,7 @@ namespace :metrics do
   task :coverage do |t|
     rm_f "doc/coverage"
     mkdir_p "doc/coverage"
-    rcov = %(rcov -Ilib:test --exclude '\/gems\/' -o doc/coverage -T test/*_test.rb )
+    rcov = %(rcov -Ilib:test --exclude '\/gems\/' -o doc/coverage -T test/unit/*_test.rb )
     system rcov
   end
   

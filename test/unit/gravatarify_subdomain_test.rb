@@ -45,6 +45,10 @@ class GravatarifySubdomainTest < Test::Unit::TestCase
       end
     end
     
+    should "not respond to 3.gravatar.com, if so add to subdomains dude!!!" do
+      assert_raises(SocketError) { Net::HTTP.get_response URI.parse('http://3.gravatar.com/avatar/4979dd9653e759c78a81d4997f56bae2.jpg') }
+    end
+    
     should "respond to https://secure.gravatar.com/ urls as well" do
       http = Net::HTTP.new('secure.gravatar.com', 443)
       http.use_ssl = true

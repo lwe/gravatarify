@@ -18,8 +18,7 @@ class GravatarifyRackVsCgiTest < Test::Unit::TestCase
     should "fallback to CGI#escape" do
       assert !defined?(Rack::Utils), 'Rack::Utils should no longer be defined'
       assert defined?(CGI), "CGI should be defined"
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?escaped%2Fme=escaped%2Fme",
-                   build_gravatar_url('bella@gmail.com', 'escaped/me' => 'escaped/me')
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?escaped%2Fme=escaped%2Fme", build_gravatar_url('bella@gmail.com', 'escaped/me' => 'escaped/me')
     end
   end
 end

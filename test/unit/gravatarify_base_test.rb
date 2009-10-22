@@ -11,58 +11,51 @@ class GravatarifyBaseTest < Test::Unit::TestCase
     
   context "#build_gravatar_url, but without any options yet" do
     should "generate correct url for hash without options" do
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", build_gravatar_url('bella@gmail.com')
+      assert_equal BELLA_AT_GMAIL_JPG, build_gravatar_url('bella@gmail.com')
     end
 
     should "trim and lowercase email address (as according to gravatar docs)" do
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", build_gravatar_url("\tbella@gmail.com \n\t")
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", build_gravatar_url("BELLA@gmail.COM")
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", build_gravatar_url(" BELLA@GMAIL.com")
+      assert_equal BELLA_AT_GMAIL_JPG, build_gravatar_url("\tbella@gmail.com \n\t")
+      assert_equal BELLA_AT_GMAIL_JPG, build_gravatar_url("BELLA@gmail.COM")
+      assert_equal BELLA_AT_GMAIL_JPG, build_gravatar_url(" BELLA@GMAIL.com")
     end
 
     should "handle a nil email as if it were an empty string" do
-      assert_equal "http://1.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e.jpg", build_gravatar_url(nil)
-      assert_equal "http://1.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e.jpg", build_gravatar_url('')
+      assert_equal NIL_JPG, build_gravatar_url(nil)
+      assert_equal NIL_JPG, build_gravatar_url('')
     end
   end
   
   context "#build_gravatar_url, with options" do
     should "add well known options like size, rating or default and always in alphabetical order" do
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?s=16", build_gravatar_url('bella@gmail.com', :size => 16)
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=http%3A%2F%2Fexample.com%2Ftest.jpg&s=20",
-                   build_gravatar_url('bella@gmail.com', :size => 20, :default => 'http://example.com/test.jpg')
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?other=escaped%26yes%3F&r=x&s=30",
-                   build_gravatar_url('bella@gmail.com', :size => 30, :rating => :x, :other => "escaped&yes?")
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?s=16", build_gravatar_url('bella@gmail.com', :size => 16)
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?d=http%3A%2F%2Fexample.com%2Ftest.jpg&s=20", build_gravatar_url('bella@gmail.com', :size => 20, :default => 'http://example.com/test.jpg')
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?other=escaped%26yes%3F&r=x&s=30", build_gravatar_url('bella@gmail.com', :size => 30, :rating => :x, :other => "escaped&yes?")
     end
     
     should "ensure that all options as well as keys are escaped correctly" do
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?escaped%2Fme=escaped%2Fme",
-                   build_gravatar_url('bella@gmail.com', 'escaped/me' => 'escaped/me')
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?escaped%2Fme=escaped%2Fme", build_gravatar_url('bella@gmail.com', 'escaped/me' => 'escaped/me')
     end
     
     should "ignore false or nil options" do
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?s=24",
-                    build_gravatar_url('bella@gmail.com', :s => 24, :invalid => false, :other => nil)
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?s=24", build_gravatar_url('bella@gmail.com', :s => 24, :invalid => false, :other => nil)
     end
     
     should "allow different :filetype to be set, like 'gif' or 'png'" do
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.gif", build_gravatar_url('bella@gmail.com', :filetype => :gif)
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.png", build_gravatar_url('bella@gmail.com', :filetype => :png)
+      assert_equal "#{BELLA_AT_GMAIL}.gif", build_gravatar_url('bella@gmail.com', :filetype => :gif)
+      assert_equal "#{BELLA_AT_GMAIL}.png", build_gravatar_url('bella@gmail.com', :filetype => :png)
     end
   
     should "skip :filetype if set to false" do
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d", build_gravatar_url('bella@gmail.com', :filetype => false)      
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", build_gravatar_url('bella@gmail.com', :filetype => nil)      
+      assert_equal "#{BELLA_AT_GMAIL}", build_gravatar_url('bella@gmail.com', :filetype => false)      
+      assert_equal "#{BELLA_AT_GMAIL_JPG}", build_gravatar_url('bella@gmail.com', :filetype => nil)      
     end
     
     should "handle Procs as :default, to easily generate default urls based on supplied :size" do
       default = Proc.new { |*args| "http://example.com/gravatar#{args.first[:size] ? '-' + args.first[:size].to_s : ''}.jpg" }
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=http%3A%2F%2Fexample.com%2Fgravatar.jpg",
-                    build_gravatar_url('bella@gmail.com', :default => default)        
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=http%3A%2F%2Fexample.com%2Fgravatar-25.jpg&s=25",
-                    build_gravatar_url('bella@gmail.com', :size => 25, :d => default)
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=http%3A%2F%2Fexample.com%2Fgravatar-20.jpg&s=20",
-                    build_gravatar_url('bella@gmail.com', :size => 20, 'd' => default)
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?d=http%3A%2F%2Fexample.com%2Fgravatar.jpg", build_gravatar_url('bella@gmail.com', :default => default)        
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?d=http%3A%2F%2Fexample.com%2Fgravatar-25.jpg&s=25", build_gravatar_url('bella@gmail.com', :size => 25, :d => default)
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?d=http%3A%2F%2Fexample.com%2Fgravatar-20.jpg&s=20", build_gravatar_url('bella@gmail.com', :size => 20, 'd' => default)
     end    
   end
   
@@ -71,21 +64,21 @@ class GravatarifyBaseTest < Test::Unit::TestCase
       obj = Object.new
       mock(obj).email { "bella@gmail.com" }
       
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", build_gravatar_url(obj)
+      assert_equal BELLA_AT_GMAIL_JPG, build_gravatar_url(obj)
     end
     
     should "look for :mail of field :email does not exist" do
       obj = Object.new
       mock(obj).mail { "bella@gmail.com" }
       
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", build_gravatar_url(obj)      
+      assert_equal BELLA_AT_GMAIL_JPG, build_gravatar_url(obj)      
     end
     
     should "finally just use to_s... if neither :email nor :mail exists" do
       obj = Object.new
       mock(obj).to_s { "bella@gmail.com" }
       
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", build_gravatar_url(obj)      
+      assert_equal BELLA_AT_GMAIL_JPG, build_gravatar_url(obj)      
     end
     
     should "handle Procs as :default and pass in the 'object' as second parameter" do
@@ -93,7 +86,7 @@ class GravatarifyBaseTest < Test::Unit::TestCase
       girl = Object.new
       mock(girl).email { "bella@gmail.com" }
       mock(girl).female? { true }      
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=http%3A%2F%2Fexample.com%2Fgravatar_girl.jpg", build_gravatar_url(girl, :default => default)
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?d=http%3A%2F%2Fexample.com%2Fgravatar_girl.jpg", build_gravatar_url(girl, :default => default)
       
       boy = Object.new
       mock(boy).email { "hans@gmail.com" }
@@ -126,7 +119,7 @@ class GravatarifyBaseTest < Test::Unit::TestCase
       
       mock_no_ssl = MockView.new
       mock(mock_no_ssl).request.stub!.ssl? { false }
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", mock_no_ssl.build_gravatar_url('bella@gmail.com')
+      assert_equal BELLA_AT_GMAIL_JPG, mock_no_ssl.build_gravatar_url('bella@gmail.com')
     end
   end
     
@@ -138,21 +131,17 @@ class GravatarifyBaseTest < Test::Unit::TestCase
     end
     
     should "ensure that default options are always added" do
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.png?anything=test&d=http%3A%2F%2Fexample.com%2Fgravatar.jpg",
-                    build_gravatar_url('bella@gmail.com')
+      assert_equal "#{BELLA_AT_GMAIL}.png?anything=test&d=http%3A%2F%2Fexample.com%2Fgravatar.jpg", build_gravatar_url('bella@gmail.com')
     end
     
     should "ensure that default options can be overriden by passing options into build_gravatar_url call" do
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.gif?anything=else&d=http%3A%2F%2Fexample.com%2Fgravatar.jpg",
-                    build_gravatar_url('bella@gmail.com', :anything => "else", :filetype => :gif)
+      assert_equal "#{BELLA_AT_GMAIL}.gif?anything=else&d=http%3A%2F%2Fexample.com%2Fgravatar.jpg", build_gravatar_url('bella@gmail.com', :anything => "else", :filetype => :gif)
     end
     
     should "ensure that no filetypes are added when :filetype set to false, unless locally specified" do
       Gravatarify.options[:filetype] = false
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d?anything=test&d=http%3A%2F%2Fexample.com%2Fgravatar.jpg",
-                    build_gravatar_url('bella@gmail.com')
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.png?anything=test&d=http%3A%2F%2Fexample.com%2Fgravatar.jpg",
-                    build_gravatar_url('bella@gmail.com', :filetype => 'png')
+      assert_equal "#{BELLA_AT_GMAIL}?anything=test&d=http%3A%2F%2Fexample.com%2Fgravatar.jpg", build_gravatar_url('bella@gmail.com')
+      assert_equal "#{BELLA_AT_GMAIL}.png?anything=test&d=http%3A%2F%2Fexample.com%2Fgravatar.jpg", build_gravatar_url('bella@gmail.com', :filetype => 'png')
     end
   end
 end

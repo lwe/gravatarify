@@ -11,15 +11,15 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
 
   context "#gravatar_url" do
     should "return same urls as build_gravatar_url" do
-      assert_equal 'http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg', gravatar_url('bella@gmail.com')
-      assert_equal 'http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=x&s=16', gravatar_url('bella@gmail.com', :d => 'x', :s => 16)      
+      assert_equal BELLA_AT_GMAIL_JPG, gravatar_url('bella@gmail.com')
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?d=x&s=16", gravatar_url('bella@gmail.com', :d => 'x', :s => 16)      
     end
   end
   
   context "#gravatar_attrs" do
     should "return hash with :height, :width, :alt and :src defined" do
       hash = gravatar_attrs('bella@gmail.com', :size => 16)
-      assert_equal 'http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?s=16', hash[:src]
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?s=16", hash[:src]
       assert_equal 16, hash[:width]
       assert_equal 16, hash[:height]
       assert_equal 'bella@gmail.com', hash[:alt]
@@ -27,21 +27,22 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
     end
     
     should "allow any param to be defined/overridden, except src, width and heigth" do
-      hash = gravatar_attrs('bella@gmail.com', :size => 20, :height => 40, :alt => 'bella', :id => 'test', :title => 'something', :class => 'gravatar')
-      assert_equal 'http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?s=20', hash[:src]
+      hash = gravatar_attrs('bella@gmail.com', :size => 20, :r => :x, :height => 40, :alt => 'bella', :id => 'test', :title => 'something', :class => 'gravatar')
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?r=x&s=20", hash[:src]
       assert_equal 20, hash[:width]
       assert_equal 20, hash[:height]
       assert_equal 'bella', hash[:alt]
       assert_equal 'test', hash[:id]
       assert_equal 'something', hash[:title]
       assert_equal 'gravatar', hash[:class]
+      assert_nil hash[:size]
+      assert_nil hash[:r]
     end
   end  
   
   context "#gravatar_tag helper" do
     should "create <img/> tag with correct gravatar urls" do
-      assert_equal '<img alt="bella@gmail.com" height="80" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg" width="80" />',
-                      gravatar_tag('bella@gmail.com')
+      assert_equal '<img alt="bella@gmail.com" height="80" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg" width="80" />', gravatar_tag('bella@gmail.com')
     end
     
     should "create <img/> tags and handle all options correctly, other options should be passed to Rails' image_tag" do
