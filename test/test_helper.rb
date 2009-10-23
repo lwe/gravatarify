@@ -13,6 +13,7 @@ Test::Unit::TestCase.send :include, RR::Adapters::TestUnit
 # Reset +Gravatarify+ to default hosts and cleared options
 def reset_gravatarify!
   Gravatarify.options.clear
+  Gravatarify.options[:filetype] = :jpg
   Gravatarify.subdomains = %w{ 0 1 2 www }
 end
 

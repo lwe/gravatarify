@@ -46,9 +46,12 @@ class GravatarifyBaseTest < Test::Unit::TestCase
       assert_equal "#{BELLA_AT_GMAIL}.png", build_gravatar_url('bella@gmail.com', :filetype => :png)
     end
   
-    should "skip :filetype if set to false" do
-      assert_equal "#{BELLA_AT_GMAIL}", build_gravatar_url('bella@gmail.com', :filetype => false)      
-      assert_equal "#{BELLA_AT_GMAIL_JPG}", build_gravatar_url('bella@gmail.com', :filetype => nil)      
+    should "skip :filetype if set to false, nil or ''" do
+      assert_equal "#{BELLA_AT_GMAIL}", build_gravatar_url('bella@gmail.com', :filetype => false)
+      assert_equal "#{BELLA_AT_GMAIL}", build_gravatar_url('bella@gmail.com', :filetype => nil)
+      assert_equal "#{BELLA_AT_GMAIL}", build_gravatar_url('bella@gmail.com', :filetype => '')
+      assert_equal "#{BELLA_AT_GMAIL}.foobar", build_gravatar_url('bella@gmail.com', :filetype => 'foobar')
+      assert_equal "#{BELLA_AT_GMAIL}.gif", build_gravatar_url('bella@gmail.com', :filetype => :gif)
     end
     
     should "handle Procs as :default, to easily generate default urls based on supplied :size" do

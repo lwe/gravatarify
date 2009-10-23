@@ -23,7 +23,7 @@ module Gravatarify
     #     # or disable adding an extension
     #     Gravatarify.options[:filetype] = false
     #
-    def options; @options ||= {} end
+    def options; @options ||= { :filetype => :jpg } end
   
     # Globally overide subdomains used to build gravatar urls, normally
     # +gravatarify+ picks from either +0.gravatar.com+, +1.gravatar.com+,
@@ -99,7 +99,7 @@ module Gravatarify
       # FIXME: add symbolize_keys again, maybe just write custom method, so we do not depend on ActiveSupport magic...
       url_options = Gravatarify.options.merge(url_options)
       email_hash = Digest::MD5.hexdigest(Base.get_smart_email_from(email).strip.downcase)
-      extension = url_options[:filetype] == false ? '' : ".#{url_options.delete(:filetype) || 'jpg'}"
+      extension = (ext = url_options.delete(:filetype) and ext != '') ? ".#{ext || 'jpg'}" : ''
       build_gravatar_host(email_hash, url_options.delete(:secure)) << "/avatar/#{email_hash}#{extension}#{build_gravatar_options(email, url_options)}"
     end
   
