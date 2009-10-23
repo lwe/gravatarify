@@ -92,7 +92,8 @@ module Gravatarify
     # @option url_options [Integer] :size (80) The size of the (square) image.
     # @option url_options [Boolean, Proc] :secure (false) If set to +true+, then uses the secure gravatar.com URL. If a Proc is
     #                                     supplied it's evaluated, the Proc should evaluate to +true+ or +false+.
-    # @option url_options [String, Symbol] :filetype (:jpg) Gravatar.com supports only <tt>:gif</tt>, <tt>:jpg</tt> and <tt>:png</tt>
+    # @option url_options [String, Symbol] :filetype (:jpg) Gravatar.com supports only <tt>:gif</tt>, <tt>:jpg</tt> and <tt>:png</tt>.
+    #                                      if an set to +false+, +nil+ or an empty string no extension is added.
     # @return [String] In any case (even if supplied +email+ is +nil+) returns a fully qualified gravatar.com URL.
     #                  The returned string is not yet HTML escaped, *but* all +url_options+ have been URI escaped.
     def build_gravatar_url(email, url_options = {})
@@ -128,7 +129,9 @@ module Gravatarify
         "?#{params.sort * '&'}" unless params.empty?
       end
       
-      def self.get_smart_email_from(obj)
+      # Tries first to call +email+, then +mail+ then +to_s+ on supplied
+      # object.
+      def self.get_smart_email_from(obj) #:nodoc:
         (obj.respond_to?(:email) ? obj.email : (obj.respond_to?(:mail) ? obj.mail : obj)).to_s
       end
   end
