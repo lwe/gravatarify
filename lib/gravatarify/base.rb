@@ -1,19 +1,7 @@
 require 'digest/md5'
 begin; require 'rack/utils'; rescue LoadError; require 'cgi' end
 
-module Gravatarify
-  # Subdomains used for balancing
-  GRAVATAR_SUBDOMAINS = %w{ 0 1 2 www } 
-  
-  # Fallback if no subdomain is found
-  GRAVATAR_DEFAULT_SUBDOMAIN = 'www'
-  
-  # If no size is specified, gravatar.com returns 80x80px images
-  GRAVATAR_DEFAULT_SIZE = 80
-  
-  # Default filetype is JPG
-  GRAVATAR_DEFAULT_FILETYPE = :jpg
-
+module Gravatarify  
   # List of known and valid gravatar options (includes shortened options).
   GRAVATAR_OPTIONS = [ :default, :d, :rating, :r, :size, :s, :secure, :filetype ]
 
@@ -53,14 +41,14 @@ module Gravatarify
     # i.e. disable host balancing!
     def use_www_only!; self.subdomains = %w{ www } end
 
-    # Access currently defined subdomains, defaults are +GRAVTAR_SUBDOMAINS+.
-    def subdomains; @subdomains ||= GRAVATAR_SUBDOMAINS end
+    # Access currently defined subdomains, defaults are +%w{ 0 1 2 www }+.
+    def subdomains; @subdomains ||= %w{ 0 1 2 www } end
     
-    # Get subdomain for supplied string or returns +GRAVATAR_DEFAULT_SUBDOMAIN+ if none is
+    # Get subdomain for supplied string or returns +www+ if none is
     # defined.
-    def subdomain(str); subdomains[str.hash % subdomains.size] || GRAVATAR_DEFAULT_SUBDOMAIN end
+    def subdomain(str); subdomains[str.hash % subdomains.size] || 'www' end
     
-    # Helper method to escape string using either <tt>Rack::Utils</tt> if available or else
+    # Helper method to escape string using either <tt>Rack::Utils#escape</tt> if available or else
     # fallback to <tt>CGI#escape</tt>.
     def escape(str)
       str = str.to_s unless str.is_a?(String) # convert to string!
@@ -111,7 +99,7 @@ module Gravatarify
       # FIXME: add symbolize_keys again, maybe just write custom method, so we do not depend on ActiveSupport magic...
       url_options = Gravatarify.options.merge(url_options)
       email_hash = Digest::MD5.hexdigest(Base.get_smart_email_from(email).strip.downcase)
-      extension = url_options[:filetype] == false ? '' : ".#{url_options.delete(:filetype) || GRAVATAR_DEFAULT_FILETYPE}"
+      extension = url_options[:filetype] == false ? '' : ".#{url_options.delete(:filetype) || 'jpg'}"
       build_gravatar_host(email_hash, url_options.delete(:secure)) << "/avatar/#{email_hash}#{extension}#{build_gravatar_options(email, url_options)}"
     end
   
