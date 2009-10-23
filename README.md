@@ -1,8 +1,8 @@
 Gravatarify
 ===========
 
-Hassle-free construction of those pesky gravatar.com urls and has out-of-the-box support for
-Rails, DataMapper and Haml. It's not that there aren't any alternatives yet [out](http://github.com/mdeering/gravitar_image_tag),
+Hassle-free construction of those pesky gravatar.com urls, with out-of-the-box support for
+Rails, DataMapper and Haml. It's not that there aren't any alternatives [out](http://github.com/mdeering/gravitar_image_tag),
 [there](http://github.com/chrislloyd/gravtastic), but none seem to support stuff like `Proc`s
 for the default picture url, or the multiple host names supported by gravatar.com (great when
 displaying lots of avatars).
@@ -14,7 +14,7 @@ displaying lots of avatars).
 Ready, Set, Go!
 ---------------
 
-**READY:** Install gravatarify as a gem (requires gemcutter):
+**READY** Install gravatarify as a gem (requires gemcutter):
 
     [sudo] gem install gravatarify
     
@@ -22,11 +22,11 @@ or as Rails plugin:
     
     ./script/plugin install git://github.com/lwe/gravatarify.git
     
-**SET:** When using as Rails plugin, skip this step. Anyhow, just ensure that when installed as a gem
+**SET** When using the Rails plugin, skip this step. Anyhow, just ensure that when installed as a gem
 it's bundled using `bundler` or defined in `config/environment.rb`, or just that it's on the `$LOAD_PATH`
 and then `require 'gravatarify'`'d somehow.
 
-**GO:** Use it! When using Rails or Haml then just give it a email and it will return the gravatar url:
+**GO** Use it! When using Rails or Haml then just give it an email and it will return the gravatar url:
 
     # creates an 20x20 pixel <img/> tag in your Rails ERB views:
     <%= gravatar_tag @user.email, :size => 20 %>
@@ -64,23 +64,22 @@ or a string containg the e-mail address:
 
     <%= gravatar_tag @user %> # => assumes @user has email or mail field!
 
-This builds a neat `<img/>`-tag, if you need to pass in stuff like the size etc. just:
-To display an "X" rated avatar which is 25x25 pixel in size and the `<img/>` tag should have
-a class attribute, do:
+This builds a neat `<img/>`-tag. To display an "X" rated avatar which is 25x25 pixel in size
+and the `<img/>` tag should have a class attribute, do:
 
     <%= gravatar_tag @user, :size => 25, :rating => :x, :class => "gravatar" %>
 
-If more control is needed, or required to use URLs in JavaScript, resort to `gravatar_url`, which
+If more control is needed, or just the plain URL is required, resort to `gravatar_url`, which
 returns a string with the (unescaped) url:
-
-    <%= image_tag gravatar_url(@user.author_email, :size => 16), :size => "16x16",
-        :alt => @user.name, :class => "avatar avatar-16" %>
+    
+    <img src="<%= h(gravatar_url(@user.author_email, :size => 16)) %>" alt="Gravatar"/>
         
 Using the model helpers
 -----------------------
 
 A very simple method to add `gravatar_url` support to models is by using the `gravatarify` class method.
 
+    # Assuming User has a field named email or mail!
     class User < ActiveRecord::Base
       gravatarify
     end
