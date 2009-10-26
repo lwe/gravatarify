@@ -14,7 +14,7 @@ module Gravatarify::Helper
   # This is also the base method for +gravatar_tag+.
   def gravatar_attrs(email, options = {})
     url_options = options.inject({}) { |hsh, (key, value)| hsh[key] = options.delete(key) if Gravatarify::GRAVATAR_OPTIONS.include?(key.to_sym); hsh }
-    options[:alt] ||= Gravatarify::Base.get_smart_email_from(email) # use email as :alt attribute
+    options[:alt] ||= "" # no longer use e-mail as alt attribute, but instead an empty alt attribute
     options[:width] = options[:height] = (url_options[:size] || 80) # customize size
     options[:src] = email.respond_to?(:gravatar_url) ? email.gravatar_url(url_options) : build_gravatar_url(email, url_options)
     options
