@@ -2,6 +2,10 @@ module Gravatarify::Helper
   # so that it's possible to access that build_gravatar_url method
   include Gravatarify::Base
   
+  # Allow HTML options to be overriden globally as well, useful
+  # to e.g. define a common alt attribute, or class.
+  def self.html_options; @html_options ||= {} end
+  
   # to simplify things a bit and have a neat-o naming
   alias_method :gravatar_url, :build_gravatar_url
   
@@ -17,7 +21,7 @@ module Gravatarify::Helper
     options[:alt] ||= "" # no longer use e-mail as alt attribute, but instead an empty alt attribute
     options[:width] = options[:height] = (url_options[:size] || 80) # customize size
     options[:src] = email.respond_to?(:gravatar_url) ? email.gravatar_url(url_options) : build_gravatar_url(email, url_options)
-    options
+    Gravatarify::Helper.html_options.merge(options)
   end
   
   # Takes care of creating an <tt><img/></tt>-tag based on a gravatar url, it no longer
