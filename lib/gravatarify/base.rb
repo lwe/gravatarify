@@ -48,7 +48,7 @@ module Gravatarify
     # defined.
     def subdomain(str); subdomains[str.hash % subdomains.size] || 'www' end
     
-    # Helper method to escape string using either <tt>Rack::Utils#escape</tt> if available or else
+    # Helper method to URI escape a string using either <tt>Rack::Utils#escape</tt> if available or else
     # fallback to <tt>CGI#escape</tt>.
     def escape(str)
       str = str.to_s unless str.is_a?(String) # convert to string!
@@ -97,7 +97,6 @@ module Gravatarify
     # @return [String] In any case (even if supplied +email+ is +nil+) returns a fully qualified gravatar.com URL.
     #                  The returned string is not yet HTML escaped, *but* all +url_options+ have been URI escaped.
     def build_gravatar_url(email, url_options = {})
-      # FIXME: add symbolize_keys again, maybe just write custom method, so we do not depend on ActiveSupport magic...
       url_options = Gravatarify.options.merge(url_options)
       email_hash = Digest::MD5.hexdigest(Base.get_smart_email_from(email).strip.downcase)
       extension = (ext = url_options.delete(:filetype) and ext != '') ? ".#{ext || 'jpg'}" : ''
