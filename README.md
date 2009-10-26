@@ -60,7 +60,7 @@ When using Rails or HAML these should be automatically available, if not do some
 
 This then provides three helper methods: `gravatar_url`, `gravatar_attrs` and `gravatar_tag`.
 To just build a simple `<img/>` tag, pass in an object (if it responds to `email` or `mail`)
-or a string containg the e-mail address:
+or a string containing the e-mail address:
 
     <%= gravatar_tag @user %> # => assumes @user has email or mail field!
 
@@ -188,7 +188,7 @@ Need more control?
   </tr>
 </table>
 
-To options globally, access the `Gravatarify.options` hash and set any options which should apply to all
+To set the options globally, access the `Gravatarify.options` hash and set any options which should apply to all
 gravatar urls there. Of course all settings can be overridden locally:
 
     # disable suffix and set default size to 16x16px
@@ -197,7 +197,13 @@ gravatar urls there. Of course all settings can be overridden locally:
     
     gravatar_url(@user.email) # => http://0.gravatar.com/avatar/..f93ff1e?s=16
     gravatar_url(@user.email, :filetype => :png) # => http://0.gravatar.com/avatar/..f93ff1e.png?s=16
+    
+A pretty nifty option also exists to set options globally for `gravatar_tag` and `gravatar_attrs`, e.g.
+to always add a title attribute:
 
+    # add title attribute
+    Gravatarify::Helper.html_options[:title] = "Gravatar"
+    
 ### Not yet enough?
 
 The `:default` option can be passed in a `Proc`, so this is certainly useful to for example
@@ -228,7 +234,7 @@ it should evaluate against `request.ssl?` for example.
 About the code
 ==============
 
-Eventhough this library has less than 100 LOC, it's split into four files, maybe a bit
+Eventhough this library has about 100 LOC, it's split into four files, maybe a bit
 of an overkill, though I like neat and tidy classes :)
 
     lib/gravatarify.rb                      # loads the other files from lib/gravatarify
@@ -245,13 +251,17 @@ of an overkill, though I like neat and tidy classes :)
                                             # gravatarify class method to add a gravatar_url
                                             # to any object.
                                             
-    lib/gravatarify/helper.rb               # Defines those view helpers, mainly gravatar_tag
-    
+    lib/gravatarify/helper.rb               # Defines those view helpers, mainly gravatar_attrs
+                                            # and gravatar_tag
 ### Contribute
 
  1. Fork the project and hack away
  2. Ensure that the changes are well tested
  3. Send me a pull request
+ 
+### Thanks
+
+ - [gudleik](http://github.com/gudleik) for his work on allowing an empty `:filetype`
 
 Licence
 =======

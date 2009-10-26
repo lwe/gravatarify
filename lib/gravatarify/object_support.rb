@@ -16,8 +16,9 @@
 #      include DataMapper::Resource
 #      property ...
 #      property :author_email, String
+#      gravatarify :author_email
 #    end
-#    @user.gravatar_url :author_email # that's it, using the specified field!
+#    @user.gravatar_url # that's it, using the specified field!
 #
 # And finally, using a plain old ruby object:
 #

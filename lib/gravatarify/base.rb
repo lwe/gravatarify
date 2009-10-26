@@ -50,7 +50,7 @@ module Gravatarify
     
     # Helper method to URI escape a string using either <tt>Rack::Utils#escape</tt> if available or else
     # fallback to <tt>CGI#escape</tt>.
-    def escape(str)
+    def escape(str) #:nodoc:
       str = str.to_s unless str.is_a?(String) # convert to string!
       defined?(Rack::Utils) ? Rack::Utils.escape(str) : CGI.escape(str)
     end
@@ -99,7 +99,7 @@ module Gravatarify
     def build_gravatar_url(email, url_options = {})
       url_options = Gravatarify.options.merge(url_options)
       email_hash = Digest::MD5.hexdigest(Base.get_smart_email_from(email).strip.downcase)
-      extension = (ext = url_options.delete(:filetype) and ext != '') ? ".#{ext || 'jpg'}" : ''
+      extension = (ext = url_options.delete(:filetype) and ext != '') ? ".#{ext || 'jpg'}" : '' # slightly adapted from gudleik's implementation
       build_gravatar_host(email_hash, url_options.delete(:secure)) << "/avatar/#{email_hash}#{extension}#{build_gravatar_options(email, url_options)}"
     end
   
