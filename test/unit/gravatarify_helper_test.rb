@@ -8,10 +8,6 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
     # just ensure that no global options are defined when starting next test
     reset_gravatarify!
   end
-  
-  def teardown
-    Gravatarify::Helper.html_options.clear
-  end
 
   context "#gravatar_url" do
     should "return same urls as build_gravatar_url" do
@@ -90,6 +86,24 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
         :title => "Gravatar for Bella", :id => "test", :class => "gravatar"
       }
       assert_equal expected, hash
+    end
+    
+    should "not allow :src, :height or :width to be set via global options and all local options should override!" do
+      Gravatarify::Helper.html_options[:src] = "avatar-30.jpg"
+      Gravatarify::Helper.html_options[:width] = 30
+      Gravatarify::Helper.html_options[:title] = "Avatar"
+      
+      assert_equal '<img alt="" height="25" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?s=25" title="Gravatar" width="25" />',
+                   gravatar_tag('bella@gmail.com', :size => 25, :title => 'Gravatar')
+    end
+    
+    should "allow :alt to be set globally" do
+      Gravatarify::Helper.html_options[:alt] = "Gravatar"
+      
+      assert_equal '<img alt="Gravatar" height="80" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg" width="80" />',
+                   gravatar_tag('bella@gmail.com')
+      assert_equal '<img alt="Avatar" height="80" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d" width="80" />',
+                   gravatar_tag('bella@gmail.com', :filetype => false, :alt => 'Avatar')
     end
   end
 end

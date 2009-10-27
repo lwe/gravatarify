@@ -8,7 +8,7 @@ module Gravatarify::Helper
   #    Gravatarify::Helper.html_options[:title] = "Gravatar"
   #
   # @return [Hash] globally defined html attributes  
-  def self.html_options; @html_options ||= {} end
+  def self.html_options; @html_options ||= { :alt => '' } end
   
   # To simplify things a bit and have a neat-o naming
   alias_method :gravatar_url, :build_gravatar_url
@@ -28,7 +28,6 @@ module Gravatarify::Helper
   # @return [Hash] all html attributes required to build an +img+ tag.
   def gravatar_attrs(email, options = {})
     url_options = options.inject({}) { |hsh, (key, value)| hsh[key] = options.delete(key) if Gravatarify::GRAVATAR_OPTIONS.include?(key.to_sym); hsh }
-    options[:alt] ||= "" # no longer use e-mail as alt attribute, but instead an empty alt attribute
     options[:width] = options[:height] = (url_options[:size] || 80) # customize size
     options[:src] = email.respond_to?(:gravatar_url) ? email.gravatar_url(url_options) : build_gravatar_url(email, url_options)
     Gravatarify::Helper.html_options.merge(options)
