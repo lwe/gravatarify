@@ -30,10 +30,11 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = "gravatarify"
-    gemspec.summary = "Awesome gravatar support for ruby (and rails)."
+    gemspec.summary = "Awesome gravatar support for Ruby (and Rails, DataMapper, Haml)."
     description = <<-DESC
-    Yet another ruby/rails gravatar plugin - though, one with unique options like 
-    `Proc`s for default images, or support for gravatar.com's multiple host names.
+    Awesome gravatar support for Ruby (and Rails, DataMapper, Haml) -
+    with unique options like Proc's for default images, or
+    support for gravatar.com's multiple host names.
     DESC
     gemspec.description = description.strip
     gemspec.email = "lukas.westermann@gmail.com"
