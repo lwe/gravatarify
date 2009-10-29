@@ -96,12 +96,13 @@ module Gravatarify
     #                                      if an set to +false+, +nil+ or an empty string no extension is added.
     # @return [String] In any case (even if supplied +email+ is +nil+) returns a fully qualified gravatar.com URL.
     #                  The returned string is not yet HTML escaped, *but* all +url_options+ have been URI escaped.
-    def build_gravatar_url(email, url_options = {})
+    def gravatar_url(email, url_options = {})
       url_options = Gravatarify.options.merge(url_options)
       email_hash = Digest::MD5.hexdigest(Base.get_smart_email_from(email).strip.downcase)
       extension = (ext = url_options.delete(:filetype) and ext != '') ? ".#{ext || 'jpg'}" : '' # slightly adapted from gudleik's implementation
       build_gravatar_host(email_hash, url_options.delete(:secure)) << "/avatar/#{email_hash}#{extension}#{build_gravatar_options(email, url_options)}"
     end
+    alias_method :build_gravatar_url, :gravatar_url
   
     private
       # Builds gravatar host name from supplied e-mail hash.

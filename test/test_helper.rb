@@ -3,9 +3,6 @@ require 'test/unit'
 require 'shoulda'
 require 'rr'
 
-require 'active_support'
-begin; require 'activerecord'; rescue LoadError; end
-begin; require 'dm-core'; rescue LoadError; end
 require 'gravatarify'
 
 Test::Unit::TestCase.send :include, RR::Adapters::TestUnit
