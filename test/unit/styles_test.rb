@@ -39,7 +39,7 @@ class StylesTest < Test::Unit::TestCase
     should "inherit default options" do
       Gravatarify.options[:size] = 45
       Gravatarify.options[:filetype] = 'png'
-      assert_equal "#{BELLA_AT_GMAIL}.png?d=wavatar&s=16", gravatar_tag('bella@gmail.com', :mini)
+      assert_equal "#{BELLA_AT_GMAIL}.png?d=wavatar&s=16", gravatar_url('bella@gmail.com', :mini)
     end
   end
   
