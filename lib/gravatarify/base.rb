@@ -25,6 +25,9 @@ module Gravatarify
     #
     def options; @options ||= { :filetype => :jpg } end
   
+    # Allows to do stuff like default options.
+    def styles; @styles ||= Hash.new({}) end
+    
     # Globally overide subdomains used to build gravatar urls, normally
     # +gravatarify+ picks from either +0.gravatar.com+, +1.gravatar.com+,
     # +2.gravatar.com+ or +www.gravatar.com+ when building hosts, to use a custom
@@ -96,8 +99,8 @@ module Gravatarify
     #                                      if an set to +false+, +nil+ or an empty string no extension is added.
     # @return [String] In any case (even if supplied +email+ is +nil+) returns a fully qualified gravatar.com URL.
     #                  The returned string is not yet HTML escaped, *but* all +url_options+ have been URI escaped.
-    def gravatar_url(email, url_options = {})
-      url_options = Gravatarify.options.merge(url_options)
+    def gravatar_url(email, *params)
+      url_options = merge_gravatar_options(*params)
       email_hash = Digest::MD5.hexdigest(Base.get_smart_email_from(email).strip.downcase)
       extension = (ext = url_options.delete(:filetype) and ext != '') ? ".#{ext || 'jpg'}" : '' # slightly adapted from gudleik's implementation
       build_gravatar_host(email_hash, url_options.delete(:secure)) << "/avatar/#{email_hash}#{extension}#{build_gravatar_options(email, url_options)}"
@@ -116,6 +119,13 @@ module Gravatarify
       def build_gravatar_host(str_hash, secure = false)
         secure = secure.call(self) if secure.respond_to?(:call)
         secure ? "https://secure.gravatar.com" : "http://#{Gravatarify.subdomain(str_hash)}.gravatar.com"        
+      end
+      
+      def merge_gravatar_options(*params)
+        options = Gravatarify.options.dup
+        options.merge!(Gravatarify.styles[params.shift]) unless params[0].is_a?(Hash)
+        options.merge!(*params) if params.size > 0
+        options
       end
     
       # Builds a query string from all passed in options.
