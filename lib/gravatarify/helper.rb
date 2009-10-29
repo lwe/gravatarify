@@ -26,7 +26,7 @@ module Gravatarify::Helper
   def gravatar_attrs(email, options = {})
     url_options = options.inject({}) { |hsh, (key, value)| hsh[key] = options.delete(key) if Gravatarify::GRAVATAR_OPTIONS.include?(key.to_sym); hsh }
     options[:width] = options[:height] = (url_options[:size] || 80) # customize size
-    options[:src] = email.respond_to?(:gravatar_url) ? email.gravatar_url(url_options) : gravatar_url(email, url_options)
+    options[:src] = gravatar_url(email, url_options)
     Gravatarify::Helper.html_options.merge(options)
   end
   
