@@ -22,6 +22,7 @@ module Gravatarify
       # any params. Then merge remaining params as hash.
       # 
       def merge_gravatar_options(*params)
+        return (params[1] || {}) if params.first == false
         options = Gravatarify.options.dup
         deep_merge_html!(options, Gravatarify.styles[params.shift] || {}) unless params.first.is_a?(Hash)
         deep_merge_html!(options, params.first) unless params.empty?

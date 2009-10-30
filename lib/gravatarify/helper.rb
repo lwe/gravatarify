@@ -1,15 +1,7 @@
 module Gravatarify::Helper
   # so that it's possible to access that build_gravatar_url method
   include Gravatarify::Base
-  
-  # Allow HTML options to be overriden globally as well, useful
-  # to e.g. define a common alt attribute, or class.
-  #
-  #    Gravatarify::Helper.html_options[:title] = "Gravatar"
-  #
-  # @return [Hash] globally defined html attributes  
-  def self.html_options; @html_options ||= { :alt => '' } end
-  
+    
   # Helper method for HAML to return a neat hash to be used as attributes in an image tag.
   #
   # Now it's as simple as doing something like:
@@ -23,11 +15,12 @@ module Gravatarify::Helper
   # @param [Hash] options other gravatar or html options for building the resulting
   #        hash.
   # @return [Hash] all html attributes required to build an +img+ tag.
-  def gravatar_attrs(email, options = {})
-    url_options = options.inject({}) { |hsh, (key, value)| hsh[key] = options.delete(key) if Gravatarify::GRAVATAR_OPTIONS.include?(key.to_sym); hsh }
-    options[:width] = options[:height] = (url_options[:size] || 80) # customize size
-    options[:src] = gravatar_url(email, url_options)
-    Gravatarify::Helper.html_options.merge(options)
+  def gravatar_attrs(email, *params)
+    url_options = Gravatarify::Utils.merge_gravatar_options(*params)
+    options = url_options[:html] || {}
+    options[:src] = gravatar_url(email, false, url_options)
+    options[:width] = options[:height] = (url_options[:size] || 80) # customize size    
+    { :alt => '' }.merge!(options) # to ensure validity merge with :alt => ''!
   end
   
   # Takes care of creating an <tt><img/></tt>-tag based on a gravatar url, it no longer
@@ -39,10 +32,7 @@ module Gravatarify::Helper
   #        image tag.
   # @return [String] a complete and hopefully valid +img+ tag.
   def gravatar_tag(email, options = {})
-    html_attrs = gravatar_attrs(email, options).map do |key,value|
-      escaped = defined?(Rack::Utils) ? Rack::Utils.escape_html(value) : CGI.escapeHTML(value)
-      "#{key}=\"#{escaped}\""
-    end.sort.join(" ")
+    html_attrs = gravatar_attrs(email, options).map { |key,value| "#{key}=\"#{Gravatarify::Utils.escape_html(value)}\"" }.sort.join(" ")
     "<img #{html_attrs} />"
   end
 end

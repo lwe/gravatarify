@@ -25,9 +25,10 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
     end
     
     should "allow any param to be defined/overridden, except src, width and heigth" do
-      hash = gravatar_attrs('bella@gmail.com', :size => 20, :r => :x, :height => 40, :alt => 'bella', :id => 'test', :title => 'something', :class => 'gravatar')
+      hash = gravatar_attrs('bella@gmail.com', :size => 20, :r => :x, :foo => 40,
+                  :html => { :alt => 'bella', :id => 'test', :title => 'something', :class => 'gravatar'})
       expected = {
-        :alt => 'bella', :src => "#{BELLA_AT_GMAIL_JPG}?r=x&s=20", :width => 20, :height => 20,
+        :alt => 'bella', :src => "#{BELLA_AT_GMAIL_JPG}?foo=40&r=x&s=20", :width => 20, :height => 20,
         :id => 'test', :title => 'something', :class => 'gravatar'
       }
       assert_equal expected, hash
@@ -45,12 +46,12 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
       assert_equal '<img alt="" height="16" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?s=16" width="16" />',
               gravatar_tag('bella@gmail.com', :size => 16)
       assert_equal '<img alt="" class="gravatar" height="16" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?d=x&amp;s=16" width="16" />',
-              gravatar_tag('bella@gmail.com', :class => "gravatar", :size => 16, :d => "x")
+              gravatar_tag('bella@gmail.com', :html => { :class => "gravatar" }, :size => 16, :d => "x")
     end
     
     should "ensure that all values are correctly html-esacped!" do
       assert_equal '<img alt="" height="80" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg" title="&lt;&gt;" width="80" />',
-              gravatar_tag('bella@gmail.com', :title => '<>')
+              gravatar_tag('bella@gmail.com', :html => { :title => '<>' })
     end
   end
   
@@ -66,12 +67,11 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
   
   context "Gravatarify::Helper#html_options" do
     should "add be added to all tags/hashes created by gravatar_tag or gravatar_attrs" do
-      Gravatarify::Helper.html_options[:title] = "Gravatar" # add a title attribute, yeah neat-o!
-      Gravatarify::Helper.html_options[:class] = "gravatar"
+      Gravatarify.options[:html] = { :title => "Gravatar", :class => "gravatar" } # add a title attribute, yeah neat-o!
       
       assert_equal '<img alt="" class="gravatar" height="80" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg" title="Gravatar" width="80" />',
                       gravatar_tag('bella@gmail.com')
-      hash = gravatar_attrs('bella@gmail.com', :size => 20, :title => "Gravatar for Bella", :id => "test")
+      hash = gravatar_attrs('bella@gmail.com', :size => 20, :html => { :title => "Gravatar for Bella", :id => "test" })
       expected = {
         :alt => "", :width => 20, :height => 20, :src => "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?s=20",
         :title => "Gravatar for Bella", :id => "test", :class => "gravatar"
@@ -80,21 +80,19 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
     end
     
     should "not allow :src, :height or :width to be set via global options and all local options should override!" do
-      Gravatarify::Helper.html_options[:src] = "avatar-30.jpg"
-      Gravatarify::Helper.html_options[:width] = 30
-      Gravatarify::Helper.html_options[:title] = "Avatar"
+      Gravatarify.options[:html] = { :src => "avatar-30.jpg", :width => 30, :title => "Avatar" }
       
       assert_equal '<img alt="" height="25" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg?s=25" title="Gravatar" width="25" />',
-                   gravatar_tag('bella@gmail.com', :size => 25, :title => 'Gravatar')
+                   gravatar_tag('bella@gmail.com', :size => 25, :html => { :title => 'Gravatar' })
     end
     
     should "allow :alt to be set globally" do
-      Gravatarify::Helper.html_options[:alt] = "Gravatar"
+      Gravatarify.options[:html] = { :alt => "Gravatar" }
       
       assert_equal '<img alt="Gravatar" height="80" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg" width="80" />',
                    gravatar_tag('bella@gmail.com')
       assert_equal '<img alt="Avatar" height="80" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d" width="80" />',
-                   gravatar_tag('bella@gmail.com', :filetype => false, :alt => 'Avatar')
+                   gravatar_tag('bella@gmail.com', :filetype => false, :html => { :alt => 'Avatar' })
     end
   end
 end

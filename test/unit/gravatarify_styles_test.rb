@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class StylesTest < Test::Unit::TestCase
+class GravatarifyStylesTest < Test::Unit::TestCase
   include Gravatarify::Helper
   
   def setup
@@ -49,6 +49,28 @@ class StylesTest < Test::Unit::TestCase
     should "still work as-is without options" do
       expected = { :src => BELLA_AT_GMAIL_JPG, :alt => '', :width => 80, :height => 80 }
       assert_equal expected, gravatar_attrs('bella@gmail.com')
+    end
+    
+    should "work with style :mini" do
+      expected = { :src => "#{BELLA_AT_GMAIL_JPG}?s=16", :alt => '', :width => 16, :height => 16 }
+      assert_equal expected, gravatar_attrs('bella@gmail.com', :mini)
+    end    
+  end
+  
+  context "Gravatarify#options and Gravatarify#styles" do
+    should "deep merge the :html attribute and inherit correctly" do
+      Gravatarify.options[:a] = "global"
+      Gravatarify.options[:b] = "global"
+      Gravatarify.options[:c] = "global"
+      Gravatarify.options[:html] = { :a => "global", :b => "global", :c => "global" }
+      Gravatarify.styles[:test] = { :b => "style", :c => "style", :html => { :b => "style", :c => "style" } }
+      
+      expected = {
+        :alt => '', :width => 80, :height => 80,
+        :src => "#{BELLA_AT_GMAIL_JPG}?a=global&b=style&c=local",
+        :a => "global", :b => "style", :c => "local"
+      }
+      assert_equal expected, gravatar_attrs('bella@gmail.com', :test, :c => "local", :html => { :c => "local" })
     end
   end
 end
