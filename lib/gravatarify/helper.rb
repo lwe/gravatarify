@@ -11,7 +11,7 @@ module Gravatarify::Helper
   #
   # @param [String, #email, #mail, #gravatar_url] email a string or an object used
   #        to generate to gravatar url for.
-  # @param [Hash] options other gravatar or html options for building the resulting
+  # @param [Symbol, Hash] *params other gravatar or html options for building the resulting
   #        hash.
   # @return [Hash] all html attributes required to build an +img+ tag.
   def gravatar_attrs(email, *params)
@@ -27,7 +27,7 @@ module Gravatarify::Helper
   #
   # @param [String, #email, #mail, #gravatar_url] email a string or an object used
   #        to generate the gravatar url from
-  # @param [Hash] options other gravatar or html options for building the resulting
+  # @param [Symbol, Hash] *params other gravatar or html options for building the resulting
   #        image tag.
   # @return [String] a complete and hopefully valid +img+ tag.
   def gravatar_tag(email, *params)
