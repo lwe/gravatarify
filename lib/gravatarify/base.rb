@@ -1,12 +1,11 @@
 require 'digest/md5'
-begin; require 'rack/utils'; rescue LoadError; require 'cgi' end
 
 module Gravatarify  
   # List of known and valid gravatar options (includes shortened options).
   GRAVATAR_OPTIONS = [ :default, :d, :rating, :r, :size, :s, :secure, :filetype ]
 
   # Hash of :ultra_long_option_name => 'abbrevated option'
-  GRAVATAR_ABBREV_OPTIONS = { :default => 'd', :rating => 'r', :size => 's' }
+  GRAVATAR_ABBREV_OPTIONS = { 'default' => 'd', 'rating' => 'r', 'size' => 's' }
   
   class << self
     # Globally define options which are then merged on every call to
@@ -25,8 +24,9 @@ module Gravatarify
     #
     def options; @options ||= { :filetype => :jpg } end
   
-    # Allows to do stuff like default options.
-    def styles; @styles ||= Hash.new({}) end
+    # Allows to define some styles, makes it simpler to call by name, instead of always giving a size etc.
+    #    
+    def styles; @styles ||= {} end
     
     # Globally overide subdomains used to build gravatar urls, normally
     # +gravatarify+ picks from either +0.gravatar.com+, +1.gravatar.com+,
@@ -35,27 +35,13 @@ module Gravatarify
     #
     #     Gravatarify.subdomains = %w{ 0 www } # only use 0.gravatar.com and www.gravatar.com
     #
-    #     Gravatarify.subdomain = 'www' # only use www! (PS: subdomain= is an alias)
-    #
     def subdomains=(subdomains) @subdomains = [*subdomains] end
-    alias_method :subdomain=, :subdomains=
-    
-    # Shortcut method to reset subdomains to only build +www.gravatar.com+ urls,
-    # i.e. disable host balancing!
-    def use_www_only!; self.subdomains = %w{ www } end
-
-    # Access currently defined subdomains, defaults are +%w{ 0 1 2 www }+.
-    def subdomains; @subdomains ||= %w{ 0 1 2 www } end
     
     # Get subdomain for supplied string or returns +www+ if none is
     # defined.
-    def subdomain(str); subdomains[str.hash % subdomains.size] || 'www' end
-    
-    # Helper method to URI escape a string using either <tt>Rack::Utils#escape</tt> if available or else
-    # fallback to <tt>CGI#escape</tt>.
-    def escape(str) #:nodoc:
-      str = str.to_s unless str.is_a?(String) # convert to string!
-      defined?(Rack::Utils) ? Rack::Utils.escape(str) : CGI.escape(str)
+    def subdomain(str)
+      @subdomains ||= %w{ 0 1 2 www }
+      @subdomains[str.hash % @subdomains.size] || 'www'
     end
   end
   
@@ -100,8 +86,8 @@ module Gravatarify
     # @return [String] In any case (even if supplied +email+ is +nil+) returns a fully qualified gravatar.com URL.
     #                  The returned string is not yet HTML escaped, *but* all +url_options+ have been URI escaped.
     def gravatar_url(email, *params)
-      url_options = merge_gravatar_options(*params)
-      email_hash = Digest::MD5.hexdigest(Base.get_smart_email_from(email).strip.downcase)
+      url_options = Utils.merge_gravatar_options(*params)
+      email_hash = Digest::MD5.hexdigest(Utils.smart_email(email))
       extension = (ext = url_options.delete(:filetype) and ext != '') ? ".#{ext || 'jpg'}" : '' # slightly adapted from gudleik's implementation
       build_gravatar_host(email_hash, url_options.delete(:secure)) << "/avatar/#{email_hash}#{extension}#{build_gravatar_options(email, url_options)}"
     end
@@ -121,28 +107,19 @@ module Gravatarify
         secure ? "https://secure.gravatar.com" : "http://#{Gravatarify.subdomain(str_hash)}.gravatar.com"        
       end
       
-      def merge_gravatar_options(*params)
-        options = Gravatarify.options.dup
-        options.merge!(Gravatarify.styles[params.shift]) unless params[0].is_a?(Hash)
-        options.merge!(*params) if params.size > 0
-        options
-      end
     
       # Builds a query string from all passed in options.
       def build_gravatar_options(source, url_options = {})
-        params = []
-        url_options.each_pair do |key, value|
-          key = GRAVATAR_ABBREV_OPTIONS[key] if GRAVATAR_ABBREV_OPTIONS.include?(key) # shorten key!
-          value = value.call(url_options, source.is_a?(String) ? self : source) if key.to_s == 'd' and value.respond_to?(:call)
-          params << "#{Gravatarify.escape(key)}=#{Gravatarify.escape(value)}" if value
+        params = url_options.inject([]) do |params, (key, value)|
+          key = key.to_s
+          if key != 'html'
+            key = GRAVATAR_ABBREV_OPTIONS[key] if GRAVATAR_ABBREV_OPTIONS.include?(key) # shorten key!
+            value = value.call(url_options, source) if key == 'd' and value.respond_to?(:call)
+            params << "#{Utils.escape(key)}=#{Utils.escape(value)}" if value
+          end
+          params
         end
         "?#{params.sort * '&'}" unless params.empty?
-      end
-      
-      # Tries first to call +email+, then +mail+ then +to_s+ on supplied
-      # object.
-      def self.get_smart_email_from(obj) #:nodoc:
-        (obj.respond_to?(:email) ? obj.email : (obj.respond_to?(:mail) ? obj.mail : obj)).to_s
-      end
-  end
+      end      
+    end
 end
