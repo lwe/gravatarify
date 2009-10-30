@@ -30,8 +30,8 @@ module Gravatarify::Helper
   # @param [Hash] options other gravatar or html options for building the resulting
   #        image tag.
   # @return [String] a complete and hopefully valid +img+ tag.
-  def gravatar_tag(email, options = {})
-    html_attrs = gravatar_attrs(email, options).map { |key,value| "#{key}=\"#{Gravatarify::Utils.escape_html(value)}\"" }.sort.join(" ")
+  def gravatar_tag(email, *params)
+    html_attrs = gravatar_attrs(email, *params).map { |key,value| "#{key}=\"#{Gravatarify::Utils.escape_html(value)}\"" }.sort.join(" ")
     "<img #{html_attrs} />"
   end
 end

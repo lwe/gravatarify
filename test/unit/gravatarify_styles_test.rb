@@ -9,7 +9,7 @@ class GravatarifyStylesTest < Test::Unit::TestCase
   end
   
   context "Gravatarify#styles" do
-    should "allow to easily set custom styles" do
+    should "store and retrieve styles" do
       Gravatarify.styles[:mini] = { :size => 16 }
       exp = { :size => 16 }
       assert_equal exp, Gravatarify.styles[:mini]
@@ -41,6 +41,14 @@ class GravatarifyStylesTest < Test::Unit::TestCase
       Gravatarify.options[:filetype] = 'png'
       assert_equal "#{BELLA_AT_GMAIL}.png?d=wavatar&s=16", gravatar_url('bella@gmail.com', :mini)
     end
+    
+    should "work with unknown style" do
+      assert_equal "#{BELLA_AT_GMAIL_JPG}", gravatar_url('bella@gmail.com', :some_style)
+    end
+    
+    should "work with unknown style and custom options" do
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?s=20", gravatar_url('bella@gmail.com', :some_style, :size => 20)
+    end    
   end
   
   context "Gravatarify::Helper#gravatar_attrs" do
@@ -55,6 +63,14 @@ class GravatarifyStylesTest < Test::Unit::TestCase
       expected = { :src => "#{BELLA_AT_GMAIL_JPG}?s=16", :alt => '', :width => 16, :height => 16 }
       assert_equal expected, gravatar_attrs('bella@gmail.com', :mini)
     end    
+  end
+  
+  context "Gravatarify::Helper#gravatar_tag" do
+    setup { Gravatarify.styles[:mini] = { :size => 16 } }
+    
+    should "work with styles and be able to override options locally" do
+      assert_equal "<img alt=\"\" height=\"16\" src=\"#{BELLA_AT_GMAIL_JPG}?r=x&amp;s=16\" width=\"16\" />", gravatar_tag('bella@gmail.com', :mini, :rating => :x)
+    end
   end
   
   context "Gravatarify#options and Gravatarify#styles" do
