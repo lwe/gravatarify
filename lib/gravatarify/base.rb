@@ -94,7 +94,7 @@ module Gravatarify
       url_options = Utils.merge_gravatar_options(*params)
       email_hash = Digest::MD5.hexdigest(Utils.smart_email(email))
       extension = (ext = url_options.delete(:filetype) and ext != '') ? ".#{ext || 'jpg'}" : '' # slightly adapted from gudleik's implementation
-      build_gravatar_host(email_hash, url_options.delete(:secure)) << "/avatar/#{email_hash}#{extension}#{build_gravatar_options(email, url_options)}"
+      build_gravatar_host(email_hash, url_options.delete(:secure)) + "/avatar/#{email_hash}#{extension}#{build_gravatar_options(email, url_options)}"
     end
     alias_method :build_gravatar_url, :gravatar_url
   
