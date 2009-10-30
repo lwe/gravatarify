@@ -25,7 +25,12 @@ module Gravatarify
     def options; @options ||= { :filetype => :jpg } end
   
     # Allows to define some styles, makes it simpler to call by name, instead of always giving a size etc.
-    #    
+    # 
+    #   Gravatarify.styles[:mini] => { :size => 30, :default => "http://example.com/gravatar-mini.jpg" }
+    # 
+    #   # in the views, it will then use the stuff defined by styles[:mini]:
+    #   <%= gravatar_tag @user, :mini %>
+    #
     def styles; @styles ||= {} end
     
     # Globally overide subdomains used to build gravatar urls, normally
@@ -72,7 +77,7 @@ module Gravatarify
     # +Gravatarify.options+.
     #
     # @param [String, #email, #mail] email a string representing an email, or object which responds to +email+ or +mail+
-    # @param [Hash] url_options customize generated gravatar.com url
+    # @param [Symbol, Hash] *params customize generated gravatar.com url. First argument can also be a style.
     # @option url_options [String, Proc] :default (nil) URL of an image to use as default when no gravatar exists. Gravatar.com
     #                                    also accepts special values like +identicon+, +monsterid+ or +wavater+ which just displays
     #                                    a generic icon based on the hash or <tt>404</tt> which return a HTTP Status 404.
@@ -106,8 +111,7 @@ module Gravatarify
         secure = secure.call(self) if secure.respond_to?(:call)
         secure ? "https://secure.gravatar.com" : "http://#{Gravatarify.subdomain(str_hash)}.gravatar.com"        
       end
-      
-    
+          
       # Builds a query string from all passed in options.
       def build_gravatar_options(source, url_options = {})
         params = url_options.inject([]) do |params, (key, value)|
