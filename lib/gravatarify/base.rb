@@ -1,10 +1,8 @@
 require 'digest/md5'
 
-module Gravatarify  
-  # List of known and valid gravatar options (includes shortened options).
-  GRAVATAR_OPTIONS = [ :default, :d, :rating, :r, :size, :s, :secure, :filetype ]
-
-  # Hash of :ultra_long_option_name => 'abbrevated option'
+module Gravatarify
+  # Hash of 'ultra_long_option_name' => 'abbrevated option'
+  # :nodoc:
   GRAVATAR_ABBREV_OPTIONS = { 'default' => 'd', 'rating' => 'r', 'size' => 's' }
   
   class << self
@@ -44,7 +42,7 @@ module Gravatarify
     
     # Get subdomain for supplied string or returns +www+ if none is
     # defined.
-    def subdomain(str)
+    def subdomain(str) #:nodoc:
       @subdomains ||= %w{ 0 1 2 www }
       @subdomains[str.hash % @subdomains.size] || 'www'
     end
