@@ -13,10 +13,10 @@ def reset_gravatarify!
   Gravatarify.options[:filetype] = :jpg
   Gravatarify.subdomains = %w{ 0 1 2 www }
   
-  if defined?(Gravatarify::Helper)
-    Gravatarify::Helper.html_options.clear
-    Gravatarify::Helper.html_options[:alt] = ''
-  end
+  #if defined?(Gravatarify::Helper)
+  #  Gravatarify::Helper.html_options.clear
+  #  Gravatarify::Helper.html_options[:alt] = ''
+  #end
 end
 
 # some often used values...
