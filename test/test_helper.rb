@@ -11,12 +11,7 @@ Test::Unit::TestCase.send :include, RR::Adapters::TestUnit
 def reset_gravatarify!
   Gravatarify.options.clear
   Gravatarify.options[:filetype] = :jpg
-  Gravatarify.subdomains = %w{ 0 1 2 www }
-  
-  #if defined?(Gravatarify::Helper)
-  #  Gravatarify::Helper.html_options.clear
-  #  Gravatarify::Helper.html_options[:alt] = ''
-  #end
+  Gravatarify.subdomains = %w{ 0 1 2 www }  
 end
 
 # some often used values...
