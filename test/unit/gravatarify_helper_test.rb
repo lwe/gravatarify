@@ -8,13 +8,6 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
     # just ensure that no global options are defined when starting next test
     reset_gravatarify!
   end
-
-  context "#gravatar_url" do
-    should "return same urls as build_gravatar_url" do
-      assert_equal BELLA_AT_GMAIL_JPG, gravatar_url('bella@gmail.com')
-      assert_equal "#{BELLA_AT_GMAIL_JPG}?d=x&s=16", gravatar_url('bella@gmail.com', :d => 'x', :s => 16)      
-    end
-  end
   
   context "#gravatar_attrs" do
     should "return hash with :height, :width, :alt and :src defined" do

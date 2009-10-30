@@ -1,5 +1,4 @@
 module Gravatarify::Helper
-  # so that it's possible to access that build_gravatar_url method
   include Gravatarify::Base
     
   # Helper method for HAML to return a neat hash to be used as attributes in an image tag.
