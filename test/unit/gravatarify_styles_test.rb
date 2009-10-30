@@ -66,10 +66,10 @@ class GravatarifyStylesTest < Test::Unit::TestCase
   end
   
   context "Gravatarify::Helper#gravatar_tag" do
-    setup { Gravatarify.styles[:mini] = { :size => 16 } }
+    setup { Gravatarify.styles[:mini] = { :size => 16, :html => { :alt => "x" } } }
     
     should "work with styles and be able to override options locally" do
-      assert_equal "<img alt=\"\" height=\"16\" src=\"#{BELLA_AT_GMAIL_JPG}?r=x&amp;s=16\" width=\"16\" />", gravatar_tag('bella@gmail.com', :mini, :rating => :x)
+      assert_equal "<img alt=\"x\" height=\"16\" src=\"#{BELLA_AT_GMAIL_JPG}?r=x&amp;s=16\" width=\"16\" />", gravatar_tag('bella@gmail.com', :mini, :rating => :x)
     end
   end
   
