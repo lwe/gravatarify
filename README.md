@@ -9,6 +9,7 @@ displaying lots of avatars).
 
 - **Source**: <http://github.com/lwe/gravatarify>
 - **Docs**:   <http://rdoc.info/projects/lwe/gravatarify>
+- **List**:   <http://groups.google.com/group/gravatarify-plugin>
 - **Gem**:    <http://gemcutter.org/gems/gravatarify>
 
 **UPGRADE NOTES:** Version 2.x is a clean-up release which breaks backwards compatibility
