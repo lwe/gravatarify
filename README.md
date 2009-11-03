@@ -11,11 +11,11 @@ displaying lots of avatars).
 - **Docs**:   <http://rdoc.info/projects/lwe/gravatarify>
 - **Gem**:    <http://gemcutter.org/gems/gravatarify>
 
-**NOTE:** Version 2.0 is a clean-up release which breaks backwards compatibility, i.e.
-the method `gravatarify` for ActiveRecord and DataMapper no longer exists. It has been
-removed, because view stuff does not belong into models and because the library was
-inconsistent when returning urls from models which defined `gravatar_url`, see
-"Upgrading from 1.x" for more information.
+**UPGRADE NOTES:** Version 2.x is a clean-up release which breaks backwards compatibility
+with 1.x releases (in some cases!). HTML attributes must be passed like:
+`gravatar_tag(@user, :size => 30, :html => { :class => "gravatar" })`, i.e. in a `:html` hash.
+Furthermore the `gravatarify` method for ActiveRecord and DataMapper no longer exists,
+see "Upgrading from 1.x" for more.
 
 Ready, Set, Go!
 ---------------
@@ -224,7 +224,24 @@ Into the block is passed the options hash and as second parameter the object its
 Not only the `:default` option accepts a Proc, but also `:secure`, can be useful to handle cases where
 it should evaluate against `request.ssl?` for example.
 
-## Upgrading from 1.x - when using `gravatarify`
+## Upgrading from 1.x
+
+All HTML options must be passed in the `:html` attribute. This allows for predictable results for
+all methods and no magic involved! So instead of doing:
+
+    gravatar_tag(@user, :size => 30, :class => "gravatar", :title => "Gravatar")
+    # Note: in Version 2.0 this would build an image src like http://..gravatar.com/...../?class=gravatar&s=30&title=Gravatar
+    
+do:
+
+    gravatar_tag(@user, :size => 30, :html => { :class => "Gravatar", :title => "Gravatar" })
+    
+An important thing to know is that the `:html` is deep merged, with defaults, so stuff like:
+
+    Gravatarify.options[:html] = { :title => "Gravatar" }
+    gravatar_tag(@user, :html => { :class => "gravatar" }) # => <img alt="" class="gravatar" ... title="Gravatar" .../>
+    
+Furthermore the option `:html` is ignored when building the url parameters.
 
 If the `gravatarify` method was not used, there's no need to change anything at all :) Though if
 it's used, then...
