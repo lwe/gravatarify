@@ -1,19 +1,26 @@
 begin; require 'rack/utils'; rescue LoadError; require 'cgi' end
 
 module Gravatarify
-  module Utils #:nodoc:          
+  
+  # Set of common utility methods used throughout the library,
+  # like escaping HTML or URLs etc.
+  module Utils #:nodoc:
+    # Set to +true+ if +Rack::Utils+ is available, kind of
+    # cached, because well it's probably used pretty often.
+    RACK_AVAILABLE = !!defined?(::Rack::Utils)
+    
     # Helper method to URI escape a string using either <tt>Rack::Utils#escape</tt> if available or else
     # fallback to <tt>CGI#escape</tt>.
     def self.escape(str)
       str = str.to_s
-      defined?(Rack::Utils) ? Rack::Utils.escape(str) : CGI.escape(str)
+      RACK_AVAILABLE ? Rack::Utils.escape(str) : CGI.escape(str)
     end
     
     # Escape HTML entities in string, basically falls back to either <tt>RackUtils#escape_html</tt>
     # or <tt>CGI#escapeHTML</tt>.
     def self.escape_html(str)
       str = str.to_s
-      defined?(Rack::Utils) ? Rack::Utils.escape_html(str) : CGI.escapeHTML(str)
+      RACK_AVAILABLE ? Rack::Utils.escape_html(str) : CGI.escapeHTML(str)
     end
     
     # Merge supplied list of +params+ with the globally defined default options and
