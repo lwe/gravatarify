@@ -1,4 +1,5 @@
 require 'digest/md5'
+require 'cgi'
 
 module Gravatarify
   # Hash of 'ultra_long_option_name' => 'abbrevated option'
@@ -6,10 +7,14 @@ module Gravatarify
   GRAVATAR_ABBREV_OPTIONS = { 'default' => 'd', 'rating' => 'r', 'size' => 's' }
   
   class << self
-    # Globally define options which are then merged on every call to
-    # +gravatar_url+, this is useful to e.g. define the default image.
+    
+    # Global options which are merged on every call to
+    # +gravatar_url+, this is useful to e.g. define a default image.
     #
-    # Setting global options should be done (for Rails apps) in an initializer:
+    # When using Rails defining default options is best done in an
+    # initializer +config/initializers/gravatarify.rb+ (or similar).
+    #
+    # Usage examples:
     #
     #     # set the default image using a Proc
     #     Gravatarify.options[:default] = Proc.new { |*args| "http://example.com/avatar-#{args.first[:size] || 80}.jpg" }
@@ -119,7 +124,7 @@ module Gravatarify
           if key != 'html'
             key = GRAVATAR_ABBREV_OPTIONS[key] if GRAVATAR_ABBREV_OPTIONS.include?(key) # shorten key!
             value = value.call(url_options, source) if key == 'd' and value.respond_to?(:call)
-            params << "#{Utils.escape(key)}=#{Utils.escape(value)}" if value
+            params << "#{key}=#{CGI.escape(value.to_s)}" if value
           end
           params
         end
