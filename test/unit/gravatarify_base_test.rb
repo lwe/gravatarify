@@ -37,8 +37,8 @@ class GravatarifyBaseTest < Test::Unit::TestCase
       assert_equal "#{BELLA_AT_GMAIL_JPG}?other=escaped%26yes%3F&r=x&s=30", gravatar_url('bella@gmail.com', :size => 30, :rating => :x, :other => "escaped&yes?")
     end
     
-    should "ensure that all options as well as keys are escaped correctly" do
-      assert_equal "#{BELLA_AT_GMAIL_JPG}?escaped%2Fme=escaped%2Fme", gravatar_url('bella@gmail.com', 'escaped/me' => 'escaped/me')
+    should "ensure that all options are escaped correctly" do
+      assert_equal "#{BELLA_AT_GMAIL_JPG}?unescaped=escaped%2Fme", gravatar_url('bella@gmail.com', 'unescaped' => 'escaped/me')
     end
     
     should "ignore false or nil options" do
