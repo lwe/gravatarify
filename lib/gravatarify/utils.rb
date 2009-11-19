@@ -21,9 +21,7 @@ module Gravatarify
     # Tries first to call +email+, then +mail+ then +to_s+ on supplied
     # object.
     def self.smart_email(obj)
-      str = (obj.respond_to?(:email) ? obj.send(:email) : (obj.respond_to?(:mail) ? obj.send(:mail) : obj)).to_s
-      str = str.sub(/\A.*?<(.+?)>.*\z/, '\1') if str =~ /<.+>/
-      str.strip.downcase
+      (obj.respond_to?(:email) ? obj.send(:email) : (obj.respond_to?(:mail) ? obj.send(:mail) : obj)).to_s.strip.downcase
     end
   end
 end

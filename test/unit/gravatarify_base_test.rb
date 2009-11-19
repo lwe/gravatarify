@@ -99,11 +99,7 @@ class GravatarifyBaseTest < Test::Unit::TestCase
       mock(boy).email { "hans@gmail.com" }
       mock(boy).female? { false }
       assert_equal "http://www.gravatar.com/avatar/b6987c8f1d734e684cf9721970b906e5.jpg?d=http%3A%2F%2Fexample.com%2Fgravatar.jpg", gravatar_url(boy, :default => default)      
-    end
-    
-    should "work easily work with RFC emails encapsulated in < and >" do
-      assert_equal BELLA_AT_GMAIL_JPG, gravatar_url('Bella <bella@gmail.com>')
-    end
+    end    
   end
   
   context "Gravatar hosts support" do
