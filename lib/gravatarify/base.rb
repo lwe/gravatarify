@@ -2,9 +2,8 @@ require 'digest/md5'
 require 'cgi'
 
 module Gravatarify
-  # Hash of 'ultra_long_option_name' => 'abbrevated option'
-  # :nodoc:
-  GRAVATAR_ABBREV_OPTIONS = { 'default' => 'd', 'rating' => 'r', 'size' => 's' }
+  # Hash of :ultra_long_option_name => :abbr_opt
+  GRAVATAR_ABBREV_OPTIONS = { 'default' => :d, :default => :d, 'rating' => :r, :rating => :r, 'size' => :s, :size => :s }
   
   class << self
     
@@ -120,10 +119,9 @@ module Gravatarify
       # Builds a query string from all passed in options.
       def build_gravatar_options(source, url_options = {})
         params = url_options.inject([]) do |params, (key, value)|
-          key = key.to_s
-          if key != 'html'
-            key = GRAVATAR_ABBREV_OPTIONS[key] if GRAVATAR_ABBREV_OPTIONS.include?(key) # shorten key!
-            value = value.call(url_options, source) if key == 'd' and value.respond_to?(:call)
+          key = (GRAVATAR_ABBREV_OPTIONS[key] || key).to_sym # shorten key
+          unless key == :html
+            value = value.call(url_options, source) if key == :d and value.respond_to?(:call)
             params << "#{key}=#{CGI.escape(value.to_s)}" if value
           end
           params
