@@ -19,7 +19,8 @@ module Gravatarify
     end
   
     # Tries first to call +email+, then +mail+ then +to_s+ on supplied
-    # object.
+    # object, also strips leading/trailing whitespace and downcases string
+    # (as specified by gravatar.com).
     def self.smart_email(obj)
       (obj.respond_to?(:email) ? obj.send(:email) : (obj.respond_to?(:mail) ? obj.send(:mail) : obj)).to_s.strip.downcase
     end
