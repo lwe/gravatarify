@@ -46,6 +46,11 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
       assert_equal '<img alt="" height="80" src="http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg" title="&lt;&gt;" width="80" />',
               gravatar_tag('bella@gmail.com', :html => { :title => '<>' })
     end
+    
+    should "be html_safe if rails 2.3.5" do
+      require 'active_support'
+      assert gravatar_tag('bella@gmail.com').html_safe?, "#html_safe? expected to return <true>"
+    end
   end
   
   context "#gravatar_tag when passed in an object" do

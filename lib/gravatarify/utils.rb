@@ -1,6 +1,6 @@
 module Gravatarify  
   # Set of common utility methods to e.g. deep merge options etc.
-  module Utils #:nodoc:        
+  module Utils #:nodoc:
     # Merge supplied list of +params+ with the globally defined default options and
     # any params. Then merge remaining params as hash.
     def self.merge_gravatar_options(*params)
@@ -24,5 +24,8 @@ module Gravatarify
     def self.smart_email(obj)
       (obj.respond_to?(:email) ? obj.send(:email) : (obj.respond_to?(:mail) ? obj.send(:mail) : obj)).to_s.strip.downcase
     end
+    
+    # Returns +true+ when those XSS methods are available, else +false+ is returned.
+    def self.with_xss?; "".respond_to?(:html_safe!) end
   end
 end
