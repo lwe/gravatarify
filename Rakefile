@@ -33,8 +33,9 @@ begin
     gemspec.summary = "Awesome gravatar support for Ruby (and Rails)."
     description = <<-DESC
     Awesome gravatar support for Ruby (and Rails) -
-    with unique options like Proc's for default images, or
-    support for gravatar.com's multiple host names.
+    with unique options like Proc's for default images,
+    support for gravatar.com's multiple host names, ability to
+    define reusable styles and much more...
     DESC
     gemspec.description = description.strip
     gemspec.email = "lukas.westermann@gmail.com"
@@ -42,6 +43,10 @@ begin
     gemspec.authors = ["Lukas Westermann"]
     gemspec.licenses = %w{LICENSE}
     gemspec.extra_rdoc_files = %w{README.md}
+    
+    gemspec.add_development_dependency('shoulda', '>= 2.10.2')
+    gemspec.add_development_dependency('rr', '>= 0.10.5')
+    gemspec.add_development_dependency('activesupport', '>= 2.3.5')
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
