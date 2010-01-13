@@ -67,7 +67,7 @@ This then provides three helper methods: `gravatar_url`, `gravatar_attrs` and `g
 To just build a simple `<img/>` tag, pass in an object (if it responds to `email` or `mail`)
 or a string containing the e-mail address:
 
-    <%= gravatar_tag @user %> # => assumes @user has email or mail field!
+    <%= gravatar_tag @user %> # => assumes @user.respond_to?(:email) or @user.respond_to?(:mail)
 
 This builds a neat `<img/>`-tag. To display an "X" rated avatar which is 25x25 pixel in size
 and the `<img/>` tag should have a class attribute, do:
@@ -79,7 +79,7 @@ pass them in the `:html` option as hash. If more control is needed, or just the 
 required, resort to `gravatar_url`, which returns a string with the (unescaped) url:
     
     <img src="<%= h(gravatar_url(@user.author_email, :size => 16)) %>" alt="Gravatar"/>
-    
+        
 Using styles
 ------------
 
@@ -94,7 +94,7 @@ these are reusable presets of options:
     <%= gravatar_tag @user, :mini %> # => <img alt="" class="gravatar gravatar-mini" height="16" src.... />
     
     # or in/another/view.html.haml:    
-    %img{gravatar_attrs(@user, :default)/ # => <img alt="" class="gravatar" height="45" ... />
+    %img{ gravatar_attrs(@user, :default) }/ # => <img alt="" class="gravatar" height="45" ... />
     
 Need to change to size of all `:mini` gravatars? Easy, just change the definition in `Gravatarify.styles`.
 Of course settings via `Gravatarify.options` are "mixed-in" as well, so:
@@ -208,9 +208,9 @@ to generate an image url, based on the request size:
     end
     
     # now each time a gravatar url is generated, the Proc is evaluated:
-    @user.gravatar_url
+    gravatar_url(@user)
     # => "http://0.gravatar.com/...jpg?d=http%3A%2F%2Fexample.com%2Fgravatar-80.jpg"
-    @user.gravatar_url(:size => 16)
+    gravatar_url(@user, :size => 16)
     # => "http://0.gravatar.com/...jpg?d=http%3A%2F%2Fexample.com%2Fgravatar-16.jpg&s=16"
     
 Into the block is passed the options hash and as second parameter the object itself, so it's possible to do stuff like
@@ -218,7 +218,7 @@ Into the block is passed the options hash and as second parameter the object its
     # doing stuff like showing default avatar based on gender...
     @user = User.new(:gender => :female, :email => 'bella@gmail.com') # => @user.female? = true
     
-    @user.gravatar_url :default => Proc.new { |opts, obj| "http://example.com/avatar#{obj.respond_to?(:female) && obj.female? ? '_female' : ''}.jpg" }
+    gravatar_url @user, :default => Proc.new { |opts, obj| "http://example.com/avatar#{obj.respond_to?(:female) && obj.female? ? '_female' : ''}.jpg" }
     # => http://0.gravatar.com/...jpg?d=http%3A%2F%2Fexample.com%2Fgravatar_female.jpg
 
 Not only the `:default` option accepts a Proc, but also `:secure`, can be useful to handle cases where
@@ -248,7 +248,7 @@ it's used, then...
 
  1. Remove all occurences of `gravatarify` in the models
  2. Change calls from `<%= image_tag @user.gravatar_url %>` to
-    saner `<%= gravatar_tag @user %>` calls or of course if just the url
+    saner `<%= gravatar_tag @user %>` calls, or if just the url
     is required to `gravatar_url(@user)`.
 
 If the model used `gravatarify :author_email`, then changes in the views must reflect that and use it
