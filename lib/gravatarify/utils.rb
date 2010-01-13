@@ -26,6 +26,6 @@ module Gravatarify
     end
     
     # Returns +true+ when those XSS methods are available, else +false+ is returned.
-    def self.with_xss?; "".respond_to?(:html_safe!) end
+    def self.with_xss?; (@xss_test ||= "<xss>".freeze).respond_to?(:html_safe!) end
   end
 end
