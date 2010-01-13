@@ -4,7 +4,7 @@ require 'benchmark'
 include Gravatarify::Helper
   
 emails = ['foo@bar.com', 'foobar_didum_asdf@asdasd.com',
-          'ASDASDSA@aasd_ASDSAd.com', ' sad@asdASdssasd  .ch', 'Master <asdASD@asdasd.com >']
+          'ASDASDSA@aasd_ASDSAd.com', ' sad@asdASdssasd.ch', ' didum@asdasd.com  ']
 n = 10000
 Benchmark.bm(23) do |bm|
   bm.report("gravatar_url w/o args: ") { for i in 1..n do gravatar_url(emails[i % 5]) end }
