@@ -24,8 +24,13 @@ module Gravatarify
     def self.smart_email(obj)
       (obj.respond_to?(:email) ? obj.send(:email) : (obj.respond_to?(:mail) ? obj.send(:mail) : obj)).to_s.strip.downcase
     end
-    
-    # Returns +true+ when those XSS methods are available, else +false+ is returned.
-    def self.with_xss?; (@xss_test ||= "<xss>".freeze).respond_to?(:html_safe!) end
+
+    # Kinda a workaround for Rails 3.x and it's newly introduced +html_safe+ method, which
+    # is used over old school +html_safe!+ method. Well, well.
+    def self.mark_html_safe_if_available(str)
+      return str.html_safe if str.respond_to?(:html_safe)
+      return str.html_safe! if str.respond_to?(:html_safe!)
+      str
+    end
   end
 end
