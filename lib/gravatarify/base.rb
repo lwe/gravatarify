@@ -96,13 +96,14 @@ module Gravatarify
       url_options = Utils.merge_gravatar_options(*params)
       email_hash = Digest::MD5.hexdigest(Utils.smart_email(email))
       extension = (ext = url_options.delete(:filetype) and ext != '') ? ".#{ext || 'jpg'}" : '' # slightly adapted from gudleik's implementation
-      build_gravatar_host(email_hash, url_options.delete(:secure)) + "/avatar/#{email_hash}#{extension}#{build_gravatar_options(email, url_options)}"
+      host = Base.gravatar_host(self, email_hash, url_options.delete(:secure))
+      "#{host}/avatar/#{email_hash}#{extension}#{Base.gravatar_params(email, url_options)}"
     end
     
     # For backwards compatibility.
     alias_method :build_gravatar_url, :gravatar_url
-  
-    private
+    
+    protected
       # Builds gravatar host name from supplied e-mail hash.
       # Ensures that for the same +str_hash+ always the same subdomain is used.
       #
@@ -111,22 +112,22 @@ module Gravatarify
       #        else that subdomain magic. If it's passed in a +Proc+, it's evaluated and the result (+true+/+false+) is used
       #        for the same decicion.
       # @return [String] Protocol and hostname (like <tt>http://www.gravatar.com</tt>), without trailing slash.
-      def build_gravatar_host(str_hash, secure = false)
-        secure = secure.call(self) if secure.respond_to?(:call)
-        secure ? "https://secure.gravatar.com" : "http://#{Gravatarify.subdomain(str_hash)}.gravatar.com"        
+      def self.gravatar_host(context, str_hash, secure = false)        
+        use_ssl_host = secure.is_a?(Proc) ? secure.call(context) : secure
+        use_ssl_host ? "https://secure.gravatar.com" : "http://#{Gravatarify.subdomain(str_hash)}.gravatar.com"        
       end
-          
+        
       # Builds a query string from all passed in options.
-      def build_gravatar_options(source, url_options = {})
+      def self.gravatar_params(source, url_options = {})
         params = url_options.inject([]) do |params, (key, value)|
-          key = (GRAVATAR_ABBREV_OPTIONS[key] || key).to_sym # shorten key
+          key = (GRAVATAR_ABBREV_OPTIONS[key] || key).to_sym # shorten & symbolize key
           unless key == :html
-            value = value.call(url_options, source) if key == :d and value.respond_to?(:call)
+            value = value.call(url_options, source) if key == :d and value.is_a?(Proc)
             params << "#{key}=#{CGI.escape(value.to_s)}" if value
           end
           params
         end
         "?#{params.sort * '&'}" unless params.empty?
-      end      
-    end
+      end    
+  end
 end

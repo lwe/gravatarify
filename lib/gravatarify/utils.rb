@@ -1,6 +1,6 @@
 module Gravatarify  
   # Set of common utility methods to e.g. deep merge options etc.
-  module Utils #:nodoc:
+  module Utils #:nodoc:    
     # Merge supplied list of +params+ with the globally defined default options and
     # any params. Then merge remaining params as hash.
     def self.merge_gravatar_options(*params)
