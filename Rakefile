@@ -45,6 +45,8 @@ begin
     gemspec.add_development_dependency('shoulda', '>= 2.10.2')
     gemspec.add_development_dependency('rr', '>= 0.10.5')
     gemspec.add_development_dependency('activesupport', '>= 2.3.5')
+
+    gemspec.files.reject! { |file| file =~ /\.gemspec$/ }
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

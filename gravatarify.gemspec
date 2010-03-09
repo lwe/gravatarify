@@ -23,7 +23,6 @@ Gem::Specification.new do |s|
      "LICENSE",
      "README.md",
      "Rakefile",
-     "VERSION.yml",
      "lib/gravatarify.rb",
      "lib/gravatarify/base.rb",
      "lib/gravatarify/helper.rb",
