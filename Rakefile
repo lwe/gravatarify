@@ -1,10 +1,7 @@
 require 'rake'
 require 'rake/testtask'
 require 'yard'
-
-def gravatarify_version
-  @gravatarify_version ||= (tmp = YAML.load(File.read('VERSION.yml'))) && [tmp[:major], tmp[:minor], tmp[:patch]] * '.'
-end
+require File.join(File.dirname(__FILE__), 'lib', 'gravatarify')
 
 desc 'Default: run unit tests.'
 task :default => :test
@@ -22,13 +19,14 @@ YARD::Rake::YardocTask.new(:doc) do |t|
   t.files = ['lib/**/*.rb']
   t.options = [
       "--readme", "README.md",
-      "--title", "gravatarify (v#{gravatarify_version}) API Documentation"
+      "--title", "gravatarify (v#{Gravatarify::VERSION}) API Documentation"
   ]
 end
 
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
+    gemspec.version = Gravatarify::VERSION
     gemspec.name = "gravatarify"
     gemspec.summary = "Awesome gravatar support for Ruby (and Rails)."
     description = <<-DESC

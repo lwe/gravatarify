@@ -1,10 +1,12 @@
 # Loads all required submodules
+module Gravatarify
+  # current API version, as defined by http://semver.org/
+  VERSION = "2.1.0".freeze
+  
+  autoload :Base,   'gravatarify/base'
+  autoload :Utils,  'gravatarify/utils'
+  autoload :Helper, 'gravatarify/helper'
+end
 
-# Base -> provides the basic gravatar_url method, can also be used for
-# custom implementations, just include Gravatarify::Base.
-require 'gravatarify/base'
-require 'gravatarify/utils'
-require 'gravatarify/helper'
-
-# and HAML support (if defined)
+# and add HAML support (if defined)
 Haml::Helpers.send(:include, Gravatarify::Helper) if defined?(Haml)
