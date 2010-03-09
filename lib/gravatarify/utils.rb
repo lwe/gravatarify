@@ -27,7 +27,7 @@ module Gravatarify
 
     # Kinda a workaround for Rails 3.x and it's newly introduced +html_safe+ method, which
     # is used over old school +html_safe!+ method. Well, well.
-    def self.mark_html_safe_if_available(str)
+    def self.make_html_safe_if_available(str)
       return str.html_safe if str.respond_to?(:html_safe)
       return str.html_safe! if str.respond_to?(:html_safe!)
       str

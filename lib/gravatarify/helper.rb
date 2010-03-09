@@ -32,6 +32,6 @@ module Gravatarify::Helper
   # @return [String] a complete and hopefully valid +img+ tag.
   def gravatar_tag(email, *params)
     html_attrs = gravatar_attrs(email, *params).map { |key,value| "#{key}=\"#{CGI.escapeHTML(value.to_s)}\"" }.sort.join(" ")
-    Gravatarify::Utils.mark_html_safe_if_available("<img #{html_attrs} />");
+    Gravatarify::Utils.make_html_safe_if_available("<img #{html_attrs} />");
   end
 end

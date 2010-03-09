@@ -48,8 +48,9 @@ class GravatarifyHelpersTest < Test::Unit::TestCase
               gravatar_tag('bella@gmail.com', :html => { :title => '<>' })
     end
     
-    should "be html_safe if rails 2.3.5" do
+    should "be html_safe if rails ~> 2.3.5" do
       require 'active_support'
+      require 'active_support/core_ext/string/output_safety' # for rails 3, be explicit...
       assert gravatar_tag('bella@gmail.com').html_safe?, "#html_safe? expected to return <true>"
     end
   end

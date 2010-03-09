@@ -2,7 +2,6 @@ require 'rubygems'
 require 'test/unit'
 require 'shoulda'
 require 'rr'
-
 require 'gravatarify'
 
 Test::Unit::TestCase.send :include, RR::Adapters::TestUnit
