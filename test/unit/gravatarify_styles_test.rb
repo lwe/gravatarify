@@ -5,6 +5,7 @@ class GravatarifyStylesTest < Test::Unit::TestCase
   
   def setup
     reset_gravatarify!
+    Gravatarify.subdomains = %w{www}
     Gravatarify.styles.clear
   end
   

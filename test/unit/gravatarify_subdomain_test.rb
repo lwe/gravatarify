@@ -10,9 +10,9 @@ class GravatarifySubdomainTest < Test::Unit::TestCase
     
   context "changing hosts through Gravatarify#subdomains" do
     should "override default subdomains (useful to e.g. switch back to 'www' only)" do
-      Gravatarify.subdomains = ['0', '1']
-      assert_equal "http://0.gravatar.com/avatar/4979dd9653e759c78a81d4997f56bae2.jpg", gravatar_url('info@initech.com')
-      assert_equal "http://1.gravatar.com/avatar/d4489907918035d0bc6ff3f6c76e760d.jpg", gravatar_url('support@initech.com')
+      Gravatarify.subdomains = ['a', 'b']
+      assert_match %r{\Ahttp://[ab].gravatar.com/avatar/4979dd9653e759c78a81d4997f56bae2.jpg\z}, gravatar_url('info@initech.com')
+      assert_match %r{\Ahttp://[ab].gravatar.com/avatar/d4489907918035d0bc6ff3f6c76e760d.jpg\z}, gravatar_url('support@initech.com')
     end
     
     should "take in a string only argument, like www" do
@@ -45,8 +45,8 @@ class GravatarifySubdomainTest < Test::Unit::TestCase
       http = Net::HTTP.new('secure.gravatar.com', 443)
       http.use_ssl = true
       
-      # do not verify peer certificate (just get rid of that warning!)
-      http.instance_variable_get('@ssl_context').verify_mode = OpenSSL::SSL::VERIFY_NONE
+      # do not verify peer certificate (just get rid of that warning!)      
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       
       response = http.get '/avatar/4979dd9653e759c78a81d4997f56bae2.jpg'
       assert_equal 200, response.code.to_i

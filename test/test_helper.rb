@@ -15,6 +15,6 @@ def reset_gravatarify!
 end
 
 # some often used values...
-BELLA_AT_GMAIL = "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d"
+BELLA_AT_GMAIL = "http://www.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d"
 BELLA_AT_GMAIL_JPG = "#{BELLA_AT_GMAIL}.jpg"
-NIL_JPG = "http://1.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e.jpg"
+NIL_JPG = "http://www.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e.jpg"

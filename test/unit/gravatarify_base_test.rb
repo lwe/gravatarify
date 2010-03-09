@@ -7,7 +7,7 @@ end
 class GravatarifyBaseTest < Test::Unit::TestCase
   include Gravatarify::Base
   
-  def setup; reset_gravatarify! end
+  def setup; reset_gravatarify!; Gravatarify.subdomains = %w{www} end
     
   context "#gravatar_url, but without any options yet" do
     should "generate correct url for hash without options" do
@@ -32,7 +32,7 @@ class GravatarifyBaseTest < Test::Unit::TestCase
   
   context "#gravatar_url, with options" do
     should "add well known options like size, rating or default and always in alphabetical order" do
-      assert_equal "#{BELLA_AT_GMAIL_JPG}?s=16", gravatar_url('bella@gmail.com', :size => 16)
+      assert_match "#{BELLA_AT_GMAIL_JPG}?s=16", gravatar_url('bella@gmail.com', :size => 16)
       assert_equal "#{BELLA_AT_GMAIL_JPG}?d=http%3A%2F%2Fexample.com%2Ftest.jpg&s=20", gravatar_url('bella@gmail.com', :size => 20, :default => 'http://example.com/test.jpg')
       assert_equal "#{BELLA_AT_GMAIL_JPG}?other=escaped%26yes%3F&r=x&s=30", gravatar_url('bella@gmail.com', :size => 30, :rating => :x, :other => "escaped&yes?")
     end
@@ -104,11 +104,11 @@ class GravatarifyBaseTest < Test::Unit::TestCase
   
   context "Gravatar hosts support" do
     should "switch to different hosts based on generated email hash, yet always the same for consecutive calls with the same email!" do
-      assert_equal "http://0.gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg", gravatar_url('bella@gmail.com')
+      assert_match %r{\Ahttp://(0|1|2|www).gravatar.com/avatar/1cacf1bc403efca2e7a58bcfa9574e4d.jpg\z}, gravatar_url('bella@gmail.com')
       assert_equal gravatar_url('bella@gmail.com'), gravatar_url('bella@gmail.com')
-      assert_equal "http://1.gravatar.com/avatar/41d86cad3dd465d6913d5a3232744441.jpg", gravatar_url('bella@bella.com')
-      assert_equal "http://2.gravatar.com/avatar/8f3af64e9c215d158b062a7b154e071e.jpg", gravatar_url('bella@hotmail.com')
-      assert_equal "http://www.gravatar.com/avatar/d2279c22a33da2cb57defd21c33c8ec5.jpg", gravatar_url('bella@yahoo.de')
+      assert_match %r{\Ahttp://(0|1|2|www).gravatar.com/avatar/41d86cad3dd465d6913d5a3232744441.jpg\z}, gravatar_url('bella@bella.com')
+      assert_match %r{\Ahttp://(0|1|2|www).gravatar.com/avatar/8f3af64e9c215d158b062a7b154e071e.jpg\z}, gravatar_url('bella@hotmail.com')
+      assert_match %r{\Ahttp://(0|1|2|www).gravatar.com/avatar/d2279c22a33da2cb57defd21c33c8ec5.jpg\z}, gravatar_url('bella@yahoo.de')
     end
     
     should "switch to https://secure.gravatar.com if :secure => true is supplied" do
