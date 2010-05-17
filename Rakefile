@@ -1,6 +1,5 @@
 require 'rake'
 require 'rake/testtask'
-require 'yard'
 require File.join(File.dirname(__FILE__), 'lib', 'gravatarify')
 
 desc 'Default: run unit tests.'
@@ -14,13 +13,18 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = true
 end
 
-desc 'Generate documentation for gravatarify. (requires yard)'
-YARD::Rake::YardocTask.new(:doc) do |t|
-  t.files = ['lib/**/*.rb']
-  t.options = [
-      "--readme", "README.md",
-      "--title", "gravatarify (v#{Gravatarify::VERSION}) API Documentation"
-  ]
+begin
+  require 'yard'
+  desc 'Generate documentation for gravatarify. (requires yard)'
+  YARD::Rake::YardocTask.new(:doc) do |t|
+    t.files = ['lib/**/*.rb']
+    t.options = [
+        "--readme", "README.md",
+        "--title", "gravatarify (v#{Gravatarify::VERSION}) API Documentation"
+    ]
+ end
+rescue LoadError
+  puts "yard is required to build documentation: gem install yard"
 end
 
 begin
@@ -57,8 +61,8 @@ desc 'Clean all generated files (.yardoc and doc/*)'
 task :clean do |t|
   FileUtils.rm_rf "doc"
   FileUtils.rm_rf "pkg"
-  FileUtils.rm_rf "gravatarify.gemspec"
   FileUtils.rm_rf ".yardoc"
+  Dir['**/*.rbc'].each { |f| File.unlink(f) }
 end
 
 namespace :metrics do
