@@ -1,1 +1,2 @@
 require 'gravatarify'
+Gravatarify.setup

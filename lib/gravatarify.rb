@@ -6,8 +6,10 @@ module Gravatarify
   autoload :Base,   'gravatarify/base'
   autoload :Utils,  'gravatarify/utils'
   autoload :Helper, 'gravatarify/helper'
+  
+  def self.setup
+    # try to hook into HAML and ActionView
+    Haml::Helpers.send(:include, Gravatarify::Helper) if defined?(Haml)
+    ActionView::Base.send(:include, Gravatarify::Helper) if defined?(ActionView)    
+  end
 end
-
-# hook into HAML and ActionView
-Haml::Helpers.send(:include, Gravatarify::Helper) if defined?(Haml)
-ActionView::Base.send(:include, Gravatarify::Helper) if defined?(ActionView)
