@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'gravatarify/helper'
 
 class GravatarifyHelpersTest < Test::Unit::TestCase
   include Gravatarify::Helper  
