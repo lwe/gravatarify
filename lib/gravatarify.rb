@@ -16,7 +16,11 @@ module Gravatarify
   end
 end
 
-ActiveSupport.on_load(:action_view) do
-  puts "[Gravatarify::Railtie] ActiveSupport.on_load(:action_view), #{self.class}"
-  include Gravatarify::Helper
+if defined?(ActiveSupport) && ActiveSupport.responds_to?(:on_load)
+  # Support for rails 3
+  ActiveSupport.on_load(:action_view) { include Gravatarify::Helper }
+else
+  # try to hook into HAML and ActionView
+  Haml::Helpers.send(:include, Gravatarify::Helper) if defined?(Haml)
+  ActionView::Base.send(:include, Gravatarify::Helper) if defined?(ActionView)
 end
