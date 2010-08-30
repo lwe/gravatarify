@@ -8,6 +8,8 @@ module Gravatarify
   autoload :Helper, 'gravatarify/helper'
   
   def self.setup
+    Rails.logger.error "[Gravatarify#setup] HAML=#{defined?(Haml) ? 'yes' : 'no'}, ActionView=#{defined?(ActionView) ? 'yes' : 'no'}"
+        
     # try to hook into HAML and ActionView
     Haml::Helpers.send(:include, Gravatarify::Helper) if defined?(Haml)
     ActionView::Base.send(:include, Gravatarify::Helper) if defined?(ActionView)    
