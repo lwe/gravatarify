@@ -7,7 +7,7 @@ module Gravatarify
   VERSION = "2.2.0".freeze
 end
 
-if defined?(ActiveSupport) && ActiveSupport.responds_to?(:on_load)
+if defined?(ActiveSupport) && ActiveSupport.respond_to?(:on_load)
   # Support for rails 3
   ActiveSupport.on_load(:action_view) { include Gravatarify::Helper }
 else
