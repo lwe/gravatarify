@@ -15,3 +15,8 @@ module Gravatarify
     ActionView::Base.send(:include, Gravatarify::Helper) if defined?(ActionView)    
   end
 end
+
+ActiveSupport.on_load(:action_view) do
+  Rails.logger.error "[Gravatarify::Railtie] ActiveSupport.on_load(:action_view), #{self.class}"
+  include Gravatarify::Helper
+end
