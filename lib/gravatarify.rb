@@ -17,6 +17,6 @@ module Gravatarify
 end
 
 ActiveSupport.on_load(:action_view) do
-  Rails.logger.error "[Gravatarify::Railtie] ActiveSupport.on_load(:action_view), #{self.class}"
+  puts "[Gravatarify::Railtie] ActiveSupport.on_load(:action_view), #{self.class}"
   include Gravatarify::Helper
 end
