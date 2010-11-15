@@ -4,7 +4,7 @@ require 'gravatarify/helper'
 
 module Gravatarify
   # current API version, as defined by http://semver.org/
-  VERSION = "2.2.1".freeze
+  VERSION = "2.2.2".freeze
 end
 
 if defined?(ActiveSupport) && ActiveSupport.respond_to?(:on_load)
