@@ -48,8 +48,10 @@ module Gravatarify
     # defined.
     def subdomain(str) #:nodoc:
       @subdomains ||= []
-      subdomain = @subdomains[str.hash % @subdomains.size]
-      subdomain + "." if subdomain
+      unless @subdomains.empty?
+        subdomain = @subdomains[str.hash % @subdomains.size]
+        subdomain + "." if subdomain
+      end
     end
   end
   
