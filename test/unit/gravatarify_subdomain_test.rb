@@ -21,10 +21,10 @@ class GravatarifySubdomainTest < Test::Unit::TestCase
       assert_equal "http://www.gravatar.com/avatar/d4489907918035d0bc6ff3f6c76e760d.jpg", gravatar_url('support@initech.com')      
     end
     
-    should "still work as expected if passed in `nil` and return urls with default subdomain `www`" do
+    should "still work as expected if passed in `nil` and return urls without subdomain (default)" do
       Gravatarify.subdomains = nil
-      assert_equal "http://www.gravatar.com/avatar/4979dd9653e759c78a81d4997f56bae2.jpg", gravatar_url('info@initech.com')
-      assert_equal "http://www.gravatar.com/avatar/d4489907918035d0bc6ff3f6c76e760d.jpg", gravatar_url('support@initech.com')            
+      assert_equal "http://gravatar.com/avatar/4979dd9653e759c78a81d4997f56bae2.jpg", gravatar_url('info@initech.com')
+      assert_equal "http://gravatar.com/avatar/d4489907918035d0bc6ff3f6c76e760d.jpg", gravatar_url('support@initech.com')            
     end
   end
     

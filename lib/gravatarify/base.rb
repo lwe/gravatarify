@@ -47,8 +47,9 @@ module Gravatarify
     # Get subdomain for supplied string or returns +www+ if none is
     # defined.
     def subdomain(str) #:nodoc:
-      @subdomains ||= %w{ 0 1 2 www }
-      (@subdomains.empty? ? nil : @subdomains[str.hash % @subdomains.size]) || 'www'
+      @subdomains ||= []
+      subdomain = @subdomains[str.hash % @subdomains.size]
+      subdomain + "." if subdomain
     end
   end
   
@@ -114,7 +115,7 @@ module Gravatarify
       # @return [String] Protocol and hostname (like <tt>http://www.gravatar.com</tt>), without trailing slash.
       def self.gravatar_host(context, str_hash, secure = false)        
         use_ssl_host = secure.is_a?(Proc) ? secure.call(context) : secure
-        use_ssl_host ? "https://secure.gravatar.com" : "http://#{Gravatarify.subdomain(str_hash)}.gravatar.com"        
+        use_ssl_host ? "https://secure.gravatar.com" : "http://#{Gravatarify.subdomain(str_hash)}gravatar.com"        
       end
         
       # Builds a query string from all passed in options.
