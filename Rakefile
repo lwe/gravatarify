@@ -1,8 +1,5 @@
-require 'rake'
+require 'bundler'
 require 'rake/testtask'
-
-$: << File.join(File.dirname(__FILE__), 'lib')
-require 'gravatarify'
 
 desc 'Default: run unit tests.'
 task :default => :test
@@ -15,6 +12,8 @@ Rake::TestTask.new(:test) do |t|
 end
 
 begin
+  $:.push File.expand_path("../lib", __FILE__)
+  require "gravatarify/version"  
   require 'yard'
   desc 'Generate documentation for gravatarify. (requires yard)'
   YARD::Rake::YardocTask.new(:doc) do |t|
@@ -26,36 +25,6 @@ begin
  end
 rescue LoadError
   puts "yard is required to build documentation: gem install yard"
-end
-
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gemspec|
-    gemspec.version = Gravatarify::VERSION
-    gemspec.name = "gravatarify"
-    gemspec.summary = "Awesome gravatar support for Ruby (and Rails)."
-    description = <<-DESC
-    Awesome gravatar support for Ruby (and Rails) -
-    with unique options like Proc's for default images,
-    support for gravatar.com's multiple host names, ability to
-    define reusable styles and much more...
-    DESC
-    gemspec.description = description.strip
-    gemspec.email = "lukas.westermann@gmail.com"
-    gemspec.homepage = "http://github.com/lwe/gravatarify"
-    gemspec.authors = ["Lukas Westermann"]
-    gemspec.licenses = %w{LICENSE}
-    gemspec.extra_rdoc_files = %w{README.md}
-    
-    gemspec.add_development_dependency('shoulda', '>= 2.10.2')
-    gemspec.add_development_dependency('rr', '>= 0.10.5')
-    gemspec.add_development_dependency('activesupport', '>= 2.3.5')
-
-    gemspec.files.reject! { |file| file =~ /\.gemspec$/ }
-  end
-  Jeweler::GemcutterTasks.new
-rescue LoadError
-  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
 desc 'Clean all generated files (.yardoc and doc/*)'

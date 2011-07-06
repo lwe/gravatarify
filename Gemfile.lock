@@ -1,0 +1,20 @@
+PATH
+  remote: .
+  specs:
+    gravatarify (2.2.4)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    activesupport (3.0.9)
+    rr (1.0.2)
+    shoulda (2.11.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activesupport (>= 3.0.0)
+  gravatarify!
+  rr (>= 0.10.5)
+  shoulda (>= 2.10.2)
