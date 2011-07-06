@@ -1,6 +1,7 @@
 require 'bundler'
 require 'rake/testtask'
 
+include Rake::DSL
 Bundler::GemHelper.install_tasks
 
 desc 'Test the gravatarify plugin.'
