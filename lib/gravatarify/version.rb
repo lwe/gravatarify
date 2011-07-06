@@ -1,4 +1,4 @@
 module Gravatarify
   # current API version, as defined by http://semver.org/
-  VERSION = "2.2.4".freeze
+  VERSION = "3.0.0".freeze
 end

@@ -2,37 +2,38 @@ Gravatarify
 ===========
 
 Hassle-free construction of those pesky gravatar.com urls, with out-of-the-box support for
-Rails, Haml and _your favorite framework_. It's not that there aren't any alternatives [out](http://github.com/mdeering/gravitar_image_tag),
+Rails 3, Haml and _your favorite framework_. It's not that there aren't any alternatives [out](http://github.com/mdeering/gravitar_image_tag),
 [there](http://github.com/chrislloyd/gravtastic), but none seem to support stuff like `Proc`s
 for the default picture url, or the multiple host names supported by gravatar.com (great when
 displaying lots of avatars).
 
 - **Source**: <http://github.com/lwe/gravatarify>
 - **Docs**:   <http://rdoc.info/projects/lwe/gravatarify>
-- **Gem**:    <http://gemcutter.org/gems/gravatarify>
+- **Gem**:    <http://rubygems.org/gems/gravatarify>
 
-**UPGRADE NOTES:** Version 2.x is a clean-up release which breaks backwards compatibility
-with 1.x releases (in some cases!). HTML attributes must be passed like:
-`gravatar_tag(@user, :size => 30, :html => { :class => "gravatar" })`, i.e. in a `:html` hash.
-Furthermore the `gravatarify` method for ActiveRecord and DataMapper no longer exists,
-see "Upgrading from 1.x" for more.
+**UPGRADE NOTES:** Version 3.x is out of box only compatible with Rails 3, yet the helpers
+should still work in Rails 2.x, so try to add `include Gravatarify::Helper` to your `ApplicationHelper`
+in Rails 2.x
 
 Ready, Set, Go!
 ---------------
 
-**READY** Install gravatarify as a gem (requires gemcutter):
+**READY** Add gravatarify to your `Gemfile`
 
-    [sudo] gem install gravatarify
+    gem 'gravatarify', '~> 3.0.0'
     
-or as Rails plugin: 
-    
-    ./script/plugin install git://github.com/lwe/gravatarify.git
-    
-**SET** When using the Rails plugin, skip this step. Anyhow, just ensure that when installed as a gem
-it's bundled using `bundler` or defined in `config/environment.rb`, or just that it's on the `$LOAD_PATH`
-and then `require 'gravatarify'`'d somehow.
+**SET** Guess, you are all set :) when using HAML or Sinatra you might to add:
 
-**GO** Use it! When using Rails or Haml then just give it an email and it will return the gravatar url:
+    # e.g. for Sinatra
+    helpers Gravatarify::Helper
+
+    # or include for Haml
+    Haml::Helpers.send(:include, Gravatarify::Helper)
+
+    # NOTE: basically just include the Gravatarify::Helper module
+
+
+**GO** Use it! When using Rails then just give it an email and it will return the gravatar url:
 
     # creates an 20x20 pixel <img/> tag in your Rails ERB views:
     <%= gravatar_tag @user.email, :size => 20 %>
@@ -53,7 +54,7 @@ Using the view helpers
 ----------------------
 
 Probably one of the easiest ways to add support for gravatar images is with the included view helpers.
-When using Rails or HAML these should be automatically available, if not do something like:
+When using Rails these should be automatically available, if not do something like:
 
     # e.g. for Sinatra
     helpers Gravatarify::Helper
