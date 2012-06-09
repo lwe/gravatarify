@@ -25,5 +25,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'shoulda',       '>= 2.10.2'
   s.add_development_dependency 'rr',            '>= 0.10.5'
   s.add_development_dependency 'activesupport', '>= 3.0.0'
+  s.add_development_dependency 'rake'
 end
 
