@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gravatarify (2.2.4)
+    gravatarify (3.0.0)
 
 GEM
   remote: http://rubygems.org/
