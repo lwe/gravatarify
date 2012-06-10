@@ -66,7 +66,7 @@ module Gravatarify
       #        for the same decicion.
       # @return [String] Protocol and hostname (like <tt>http://www.gravatar.com</tt>), without trailing slash.
       def self.gravatar_host(context, str_hash, secure = false)        
-        use_ssl_host = secure.is_a?(Proc) ? secure.call(context) : secure
+        use_ssl_host = secure.respond_to?(:call) ? secure.call(context) : secure
         use_ssl_host ? "https://secure.gravatar.com" : "http://#{Gravatarify.subdomain(str_hash)}gravatar.com"        
       end
         
@@ -75,7 +75,7 @@ module Gravatarify
         params = url_options.inject([]) do |params, (key, value)|
           key = (GRAVATAR_ABBREV_OPTIONS[key] || key).to_sym # shorten & symbolize key
           unless key == :html
-            value = value.call(url_options, source) if key == :d and value.is_a?(Proc)
+            value = value.call(url_options, source) if key == :d && value.respond_to?(:call)
             params << "#{key}=#{CGI.escape(value.to_s)}" if value
           end
           params
