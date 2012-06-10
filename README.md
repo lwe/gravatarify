@@ -303,7 +303,8 @@ of an overkill, though I like neat and tidy classes :)
  
 ### Thanks
 
- - [gudleik](http://github.com/gudleik) for his work on allowing an empty `:filetype`
+ - [gudleik](https://github.com/gudleik) for his work on allowing an empty `:filetype`
+ - [thegcat](https://github.com/thegcat) travis, jruby and ruby 1.9 support
 
 Licence
 =======
