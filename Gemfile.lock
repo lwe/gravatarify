@@ -6,9 +6,17 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (3.0.9)
-    rr (1.0.2)
-    shoulda (2.11.3)
+    activesupport (3.2.5)
+      i18n (~> 0.6)
+      multi_json (~> 1.0)
+    i18n (0.6.0)
+    multi_json (1.3.6)
+    rr (1.0.4)
+    shoulda (3.0.1)
+      shoulda-context (~> 1.0.0)
+      shoulda-matchers (~> 1.0.0)
+    shoulda-context (1.0.0)
+    shoulda-matchers (1.0.0)
 
 PLATFORMS
   ruby
@@ -16,5 +24,6 @@ PLATFORMS
 DEPENDENCIES
   activesupport (>= 3.0.0)
   gravatarify!
+  jruby-openssl
   rr (>= 0.10.5)
   shoulda (>= 2.10.2)
