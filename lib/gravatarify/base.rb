@@ -4,10 +4,10 @@ require 'cgi'
 module Gravatarify
   # Hash of :ultra_long_option_name => :abbr_opt
   GRAVATAR_ABBREV_OPTIONS = { 'default' => :d, :default => :d, 'rating' => :r, :rating => :r, 'size' => :s, :size => :s }
-    
+
   # Provides core support to build gravatar urls based on supplied e-mail strings.
   module Base
-    
+
     # Method which builds a gravatar url based on a supplied email and options as
     # defined by gravatar.com (http://en.gravatar.com/site/implement/url).
     #
@@ -19,11 +19,11 @@ module Gravatarify
     #
     # If supplied +email+ responds to either a method named +email+ or +mail+, the value of that method
     # is used instead to build the gravatar hash. Very useful to just pass in ActiveRecord object for instance:
-    #    
+    #
     #    @user = User.find_by_email("samir@initech.com")
     #    gravatar_url(@user) # => "http://2.gravatar.com/avatar/58cf31c817d76605d5180ce1a550d0d0.jpg"
     #    gravatar_url(@user.email) # same as above!
-    # 
+    #
     # Among all options as defined by gravatar.com's specification, there also exist some special options:
     #
     #    gravatar_url(@user, :secure => true) # => https://secure.gravatar.com/ava....
@@ -52,10 +52,10 @@ module Gravatarify
       host = Base.gravatar_host(self, email_hash, url_options.delete(:secure))
       "#{host}/avatar/#{email_hash}#{extension}#{Base.gravatar_params(email, url_options)}"
     end
-    
+
     # For backwards compatibility.
     alias_method :build_gravatar_url, :gravatar_url
-    
+
     protected
       # Builds gravatar host name from supplied e-mail hash.
       # Ensures that for the same +str_hash+ always the same subdomain is used.
@@ -65,11 +65,11 @@ module Gravatarify
       #        else that subdomain magic. If it's passed in a +Proc+, it's evaluated and the result (+true+/+false+) is used
       #        for the same decicion.
       # @return [String] Protocol and hostname (like <tt>http://www.gravatar.com</tt>), without trailing slash.
-      def self.gravatar_host(context, str_hash, secure = false)        
-        use_ssl_host = secure.respond_to?(:call) ? secure.call(context) : secure
-        use_ssl_host ? "https://secure.gravatar.com" : "http://#{Gravatarify.subdomain(str_hash)}gravatar.com"        
+      def self.gravatar_host(context, str_hash, secure = false)
+        use_https = secure.respond_to?(:call) ? secure.call(context) : secure
+        "#{use_https ? 'https' : 'http'}://#{Gravatarify.subdomain(str_hash)}gravatar.com"
       end
-        
+
       # Builds a query string from all passed in options.
       def self.gravatar_params(source, url_options = {})
         params = url_options.inject([]) do |params, (key, value)|
@@ -81,6 +81,6 @@ module Gravatarify
           params
         end
         "?#{params.sort * '&'}" unless params.empty?
-      end    
+      end
   end
 end
