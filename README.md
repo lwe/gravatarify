@@ -21,7 +21,7 @@ Ready, Set, Go!
 **READY** Add gravatarify to your `Gemfile`
 
     gem 'gravatarify', '~> 3.0.0'
-    
+
 **SET** Guess, you are all set :) when using HAML or Sinatra you might to add:
 
     # e.g. for Sinatra
@@ -37,11 +37,11 @@ Ready, Set, Go!
 
     # creates an 20x20 pixel <img/> tag in your Rails ERB views:
     <%= gravatar_tag @user.email, :size => 20 %>
-    
+
     # or in HAML views
     # (Note: how it's possible to skip the email attribute, btw - that's a feature)
     %img{ gravatar_attrs(@user, :size => 20) }/
-    
+
 **More!?** Allright, that was just the quickstart, to get up and running with ease. However, this library provides
 quite a bit more, like:
 
@@ -78,31 +78,31 @@ and the `<img/>` tag should have a class attribute, do:
 If any additional HTML attributes are needed on the tag, or in the `gravatar_attrs`, just
 pass them in the `:html` option as hash. If more control is needed, or just the plain URL is
 required, resort to `gravatar_url`, which returns a string with the (unescaped) url:
-    
+
     <img src="<%= h(gravatar_url(@user.author_email, :size => 16)) %>" alt="Gravatar"/>
-        
+
 Using styles
 ------------
 
 With styles it's possible to easily change e.g. the size of all gravatars based on a name,
 these are reusable presets of options:
-  
+
     # in config/initializers/gravatarify.rb or similar:
     Gravatarify.styles[:mini] = { :size => 16, :html => { :class => 'gravatar gravatar-mini' } }
     Gravatarify.styles[:default] = { :size => 45, :html => { :class => 'gravatar' } }
- 
+
     # then in/some/view.html.erb:
     <%= gravatar_tag @user, :mini %> # => <img alt="" class="gravatar gravatar-mini" height="16" src.... />
-    
-    # or in/another/view.html.haml:    
+
+    # or in/another/view.html.haml:
     %img{ gravatar_attrs(@user, :default) }/ # => <img alt="" class="gravatar" height="45" ... />
-    
+
 Need to change to size of all `:mini` gravatars? Easy, just change the definition in `Gravatarify.styles`.
 Of course settings via `Gravatarify.options` are "mixed-in" as well, so:
 
     Gravatarify.options[:default] = Proc.new { |*params| "http://example.com/avatar-#{params.first[:size] || 80}.jpg" }
     Gravatarify.styles[:mini] => { :size => 16 }
-    
+
     <%= gravatar_tag @user, :mini %> # => <img alt="" height="16" src=".....?d=http://example.com/avatar-16.jpg" width="16" />
 
 All methods accept a style, i.e. a style parameter can be passed in to `gravatar_attrs`, `gravatar_tag` and
@@ -117,7 +117,7 @@ Back to the roots?
 
 No need for sophisticated stuff like view helpers, want to go back to the roots?
 Then feel free to use `Gravatarify::Base#gravatar_url` directly.
-    
+
 When the ability to display image tags is required in different view frameworks (like liquid!?),
 then just ensure that `Gravatarify::Helper` is included in the framework in question.
 See {Gravatarify::Base#gravatar_url} and of course {Gravatarify::Helper} for more informations
@@ -170,7 +170,7 @@ Need more control?
   <tr>
     <td><tt>:filetype</tt></td>
     <td>String, Symbol</td>
-    <td>Change image type, gravatar.com supports <tt>:gif</tt>, <tt>:png</tt> and <tt>:jpg</tt>. If set to <tt>false</tt> 
+    <td>Change image type, gravatar.com supports <tt>:gif</tt>, <tt>:png</tt> and <tt>:jpg</tt>. If set to <tt>false</tt>
       then a URL without an extension will be built (and gravatar.com then returns a JPG image).</td>
     <td><tt>:jpg</tt></td>
   </tr>
@@ -189,15 +189,15 @@ gravatar urls there. Of course all settings can be overridden locally:
     # disable suffix and set default size to 16x16px
     Gravatarify.options[:filetype] = false
     Gravatarify.options[:size] = 16
-    
+
     gravatar_url(@user.email) # => http://0.gravatar.com/avatar/..f93ff1e?s=16
     gravatar_url(@user.email, :filetype => :png) # => http://0.gravatar.com/avatar/..f93ff1e.png?s=16
-    
+
 To define global HTML attributes go ahead and do something like:
 
     # add title attribute
     Gravatarify.options[:html] = { :title => "Gravatar" }
-    
+
 ## Not yet enough?
 
 The `:default` option can be passed in a `Proc`, so this is certainly useful to for example
@@ -207,18 +207,18 @@ to generate an image url, based on the request size:
     Gravatarify.options[:default] = Proc.new do |options, object|
       "http://example.com/avatar-#{options[:size] || 80}.jpg"
     end
-    
+
     # now each time a gravatar url is generated, the Proc is evaluated:
     gravatar_url(@user)
     # => "http://0.gravatar.com/...jpg?d=http%3A%2F%2Fexample.com%2Fgravatar-80.jpg"
     gravatar_url(@user, :size => 16)
     # => "http://0.gravatar.com/...jpg?d=http%3A%2F%2Fexample.com%2Fgravatar-16.jpg&s=16"
-    
+
 Into the block is passed the options hash and as second parameter the object itself, so it's possible to do stuff like
 
     # doing stuff like showing default avatar based on gender...
     @user = User.new(:gender => :female, :email => 'bella@gmail.com') # => @user.female? = true
-    
+
     gravatar_url @user, :default => Proc.new { |opts, obj| "http://example.com/avatar#{obj.respond_to?(:female) && obj.female? ? '_female' : ''}.jpg" }
     # => http://0.gravatar.com/...jpg?d=http%3A%2F%2Fexample.com%2Fgravatar_female.jpg
 
@@ -232,16 +232,16 @@ all methods and no magic involved! So instead of doing:
 
     gravatar_tag(@user, :size => 30, :class => "gravatar", :title => "Gravatar")
     # Note: in Version 2.0 this would build an image src like http://..gravatar.com/...../?class=gravatar&s=30&title=Gravatar
-    
+
 do:
 
     gravatar_tag(@user, :size => 30, :html => { :class => "Gravatar", :title => "Gravatar" })
-    
+
 An important thing to know is that the `:html` is deep merged, with defaults, so stuff like:
 
     Gravatarify.options[:html] = { :title => "Gravatar" }
     gravatar_tag(@user, :html => { :class => "gravatar" }) # => <img alt="" class="gravatar" ... title="Gravatar" .../>
-    
+
 Furthermore the option `:html` is ignored when building the url parameters.
 
 If the `gravatarify` method was not used, there's no need to change anything at all :) Though if
@@ -260,7 +260,7 @@ directly: `<%= gravatar_tag @user.author_email %>`. If the model defines `author
     class Author < ActiveRecord::Base
       alias_attribute :email, :author_email
     end
-    
+
     # and in the views:
     <%= gravatar_tag @author %>
 
@@ -270,7 +270,7 @@ methods! The `gravatarify` method was introduced to provide compatibility with
 then feel free to fallback and use an older version (i.e. 1.2.1):
 
     [sudo] gem install gravatarify -v 1.2.1
-    
+
 
 About the code
 ==============
@@ -281,30 +281,31 @@ of an overkill, though I like neat and tidy classes :)
     lib/gravatarify.rb                      # loads the other files from lib/gravatarify
                                             # and hooks the necessary modules into
                                             # HAML or ActionView.
-                                            
+
     lib/gravatarify/base.rb                 # Provides all logic required to generate
                                             # gravatar.com urls from an email address.
                                             # Check out Gravatarify::Base.gravatar_url,
                                             # this is the absolute core method.
-                                                                                        
+
     lib/gravatarify/helper.rb               # Defines the view helpers: gravatar_attrs
                                             # and gravatar_tag
-                                            
+
     lib/gravatarify/utils.rb                # Provides commonly used methods, like helpers to
                                             # uri and html escape strings or deep mergeing
                                             # hashes. Though these utils are only for internal
                                             # uses :)
-                                            
+
 ### Contribute
 
  1. Fork the project and hack away
  2. Ensure that the changes are well tested
  3. Send me a pull request
- 
+
 ### Thanks
 
  - [gudleik](https://github.com/gudleik) for his work on allowing an empty `:filetype`
  - [thegcat](https://github.com/thegcat) travis, jruby and ruby 1.9 support
+ - [technoweenie](https://github.com/technoweenie) fix to use consistent hashing: `Zlib.crc32`
 
 Licence
 =======
