@@ -8,11 +8,24 @@ class GravatarifySubdomainTest < Test::Unit::TestCase
 
   def setup; reset_gravatarify! end
 
+  context "#subdomain(str)" do
+    should "return consistent subdomain for each and every run (uses Zlib.crc32 and not String#hash)" do
+      Gravatarify.subdomains = %w{a b c d e f g}
+      assert_equal "a.", Gravatarify.subdomain("c") # => 112844655 % 7 = 0
+      assert_equal "b.", Gravatarify.subdomain("asdf") # => 1361703869 % 7 = 1
+      assert_equal "c.", Gravatarify.subdomain("some string") # => 4182587481 % 7 = 2
+      assert_equal "d.", Gravatarify.subdomain("info@initech.com") # => 3555211446 % 7 = 3
+      assert_equal "e.", Gravatarify.subdomain("a") # => 3904355907 % 7 = 4
+      assert_equal "f.", Gravatarify.subdomain("support@initech.com") # => 3650283369 % 7 = 5
+      assert_equal "g.", Gravatarify.subdomain("didum") # => 3257626035 % 7 = 6
+    end
+  end
+
   context "changing hosts through Gravatarify#subdomains" do
     should "override default subdomains (useful to e.g. switch back to 'www' only)" do
-      Gravatarify.subdomains = ['a', 'b']
-      assert_match %r{\Ahttp://[ab].gravatar.com/avatar/4979dd9653e759c78a81d4997f56bae2.jpg\z}, gravatar_url('info@initech.com')
-      assert_match %r{\Ahttp://[ab].gravatar.com/avatar/d4489907918035d0bc6ff3f6c76e760d.jpg\z}, gravatar_url('support@initech.com')
+      Gravatarify.subdomains = %w{a b c d e f g}
+      assert_equal "http://d.gravatar.com/avatar/4979dd9653e759c78a81d4997f56bae2.jpg", gravatar_url('info@initech.com')
+      assert_equal "http://c.gravatar.com/avatar/d4489907918035d0bc6ff3f6c76e760d.jpg", gravatar_url('support@initech.com')
     end
 
     should "take in a string only argument, like www" do
