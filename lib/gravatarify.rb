@@ -1,4 +1,5 @@
 require 'gravatarify/version'
+require 'zlib'
 
 # Provides support for adding gravatar images in ruby (and rails)
 # applications.
@@ -51,7 +52,7 @@ module Gravatarify
     def subdomain(str) #:nodoc:
       @subdomains ||= []
       unless @subdomains.empty?
-        subdomain = @subdomains[str.hash % @subdomains.size]
+        subdomain = @subdomains[Zlib.crc32(str) % @subdomains.size]
         subdomain + "." if subdomain
       end
     end
